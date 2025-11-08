@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "The Diary Of",
   description: "A platform for sharing and discovering personal stories",
   icons: {
-    icon: "/logo.png",
+    icon: "/favicon.png",
   },
 };
 
