@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import logo from "../../public/logo-landscape-transparent.png";
+import Link from "next/link";
 
 export default function AuthLayout({
   children,
@@ -21,8 +22,8 @@ export default function AuthLayout({
           <Image
             src={logo}
             alt="Logo"
-            width={200}
-            className="mb-8 mx-auto"
+            width={1200}
+            className="mb-4 w-[400px] mx-auto"
             priority
           />
           <h1 className="text-4xl text-black font-serif mb-4">Welcome Back!</h1>
@@ -33,8 +34,16 @@ export default function AuthLayout({
         </motion.div>
       </div>
 
-      {/* Right panel */}
-      <div className="flex-1 flex md:items-center justify-center w-full px-8 py-16">
+      <div className="flex-col flex-1 flex md:items-center md:justify-center w-full px-8 py-10 md:py-16">
+        <Link href="/">
+          <Image
+            src={logo}
+            alt="Logo"
+            width={1200}
+            className="mb-8 md:hidden w-[200px] mx-auto"
+            priority
+          />
+        </Link>
         <div
           className="w-full max-w-md"
         >

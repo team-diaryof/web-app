@@ -1,13 +1,16 @@
 "use client"
 
+import AnimatePageWrapper from "@/components/animations/animate-page-wrapper"
+import Button from "@/components/ui/button"
+import Loading from "@/components/ui/loading"
+import { PaperPlaneTiltIcon, ThumbsUpIcon, WarningIcon } from "@phosphor-icons/react"
 import axios from "axios"
+import { AnimatePresence, motion, Variants } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { FormEvent, useState } from "react"
-import { AnimatePresence, motion, Variants } from "framer-motion"
-import logo from "../../public/logo-landscape-white.png"
-import heroImage from "../../public/newsletter.png"
-import AnimatePageWrapper from "@/components/animations/animate-page-wrapper"
+import logo from "@/public/logo-landscape-white.png"
+import heroImage from "@/public/newsletter.png"
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -137,17 +140,16 @@ const NewsLetter = () => {
                                             transition={{ duration: 0.3, ease: "easeInOut" }}
                                             className="bg-gray-100 absolute inset-0 flex items-center px-6 pointer-events-none"
                                         >
-                                            <span className={`text-sm font-medium ${status === "error" ? "text-red-600" : "text-emerald-600"}`}>
+                                            <span className={`text-xs md:text-sm font-medium ${status === "error" ? "text-red-600" : "text-emerald-600"}`}>
                                                 {status === "error" ? error : "Thanks! Please check your inbox."}
                                             </span>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
                             </div>
-                            <button
-                                type="submit"
+                            <Button
                                 disabled={status === "loading"}
-                                className="px-5 py-3 text-sm font-medium cursor-pointer btn-primary w-36 m-1 relative overflow-hidden"
+                                className="px-5 py-3 w-20 md:w-36 m-1 relative"
                             >
                                 <AnimatePresence mode="wait">
                                     <motion.span
@@ -158,12 +160,26 @@ const NewsLetter = () => {
                                         transition={{ duration: 0.3, ease: "easeInOut" }}
                                         className="block"
                                     >
-                                        {getButtonText()}
+                                        <span className="max-md:hidden">
+                                            {
+                                                status === "loading" ? <p>Sending..</p>
+                                                    : status === "success" ? <p>Sent!</p>
+                                                        : status === "error" ? <p>Failed</p>
+                                                            : <p>Sign Up</p>
+                                            }
+                                        </span>
+                                        <span className="md:hidden flex items-center justify-center">
+                                            {
+                                                status === "loading" ? <Loading size="sm" />
+                                                    : status === "success" ? <ThumbsUpIcon size={17} />
+                                                        : status === "error" ? <WarningIcon size={17} />
+                                                            : <PaperPlaneTiltIcon size={17} />
+                                            }
+                                        </span>
                                     </motion.span>
                                 </AnimatePresence>
-                            </button>
+                            </Button>
                         </form>
-
                         <div className="mt-12 flex max-md:justify-center items-center gap-8 text-sm text-zinc-600">
                             <Link href="/contact" className="hover:underline">
                                 CONTACT

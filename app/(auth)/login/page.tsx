@@ -1,10 +1,15 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import Link from "next/link";
-import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
 import AnimatePageWrapper from "@/components/animations/animate-page-wrapper";
+import Button from "@/components/ui/button";
+import Input from "@/components/ui/input";
+import Loading from "@/components/ui/loading";
+import axios from "axios";
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import { FormEvent, useState } from "react";
+import googleImage from "@/public/google.png";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -19,47 +24,75 @@ export default function LoginPage() {
 
     try {
       await axios.post("/api/v1/auth/login", { email, password });
-      setStatus("success");
+      setTimeout(() => {
+        setStatus("success");
+      }, 2000);
     } catch {
       setStatus("error");
       setError("Invalid credentials. Try again.");
     } finally {
-      setTimeout(() => setStatus("idle"), 4000);
+      setTimeout(() => {
+        setStatus("idle");
+      }, 4000);
     }
   };
 
+  const handleGoogleSignIn = () => {
+    // Implement Google OAuth flow
+    window.location.href = "/api/v1/auth/google";
+  };
+
   return (
-    <AnimatePageWrapper className="text-center">
-      <h1 className="text-3xl font-serif mb-6">Welcome Back</h1>
-      <p className="text-gray-600 mb-8">Log in to your account</p>
+    <AnimatePageWrapper className="">
+      <motion.header layout className="flex items-center flex-col">
+        <h1 className="text-3xl font-serif mb-4">Welcome Back</h1>
+        <p className="text-gray-600 mb-2">Log in to your account</p>
+      </motion.header>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <input
-            type="email"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="w-full rounded-full border border-gray-300 px-5 py-3 outline-none focus:ring-2 focus:ring-gray-800 transition"
-          />
-        </div>
+      <AnimatePresence mode="wait">
+        {(status === "error" || status === "success") && (
+          <motion.p
+            key={status}
+            initial={{ opacity: 0, height: 0, marginTop: 0, marginBottom: 0 }}
+            animate={{ opacity: 1, height: "auto", marginTop: 8, marginBottom: 16 }}
+            exit={{ opacity: 0, height: 0, marginTop: 0, marginBottom: 0 }}
+            transition={{ duration: 0.3 }}
+            className={`text-sm text-center p-2 overflow-hidden ${
+              status === "error" ? "text-red-600 bg-red-50" : "text-green-600 bg-green-50"
+            }`}
+          >
+            {status === "error"
+              ? error ?? "Something went wrong."
+              : "Welcome back! Check your inbox or continue."}
+          </motion.p>
+        )}
+      </AnimatePresence>
 
-        <div>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="w-full rounded-full border border-gray-300 px-5 py-3 outline-none focus:ring-2 focus:ring-gray-800 transition"
-          />
-        </div>
-
-        <button
-          type="submit"
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <Input
+          type="email"
+          label="Email Address"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
           disabled={status === "loading"}
-          className="w-full rounded-full bg-black text-white py-3 font-medium transition hover:bg-gray-800"
+        />
+
+        <Input
+          type="password"
+          label="Password"
+          placeholder="Enter your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          disabled={status === "loading"}
+        />
+
+        <Button
+          variant="primary"
+          className="w-full h-12 justify-center mt-6"
+          disabled={status === "loading"}
         >
           <AnimatePresence mode="wait">
             <motion.span
@@ -69,22 +102,41 @@ export default function LoginPage() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
             >
-              {status === "loading"
-                ? "Signing in..."
-                : status === "success"
-                ? "Success!"
-                : "Login"}
+              {status === "loading" ? (
+                <Loading size="sm" />
+              ) : status === "success" ? (
+                "Signed in!"
+              ) : status === "error" ? (
+                "Try again"
+              ) : (
+                "Login"
+              )}
             </motion.span>
           </AnimatePresence>
-        </button>
-
-        {status === "error" && (
-          <p className="text-sm text-red-500 mt-2">{error}</p>
-        )}
+        </Button>
       </form>
 
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-gray-300"></div>
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="px-2 bg-white text-gray-500">Or continue with</span>
+        </div>
+      </div>
+
+      <Button
+        variant="secondary"
+        className="w-full flex items-center h-12 justify-center gap-3"
+        onClick={handleGoogleSignIn}
+        disabled={status === "loading"}
+      >
+        <Image src={googleImage} className="size-8" alt="google-image" />
+        Sign in with Google
+      </Button>
+
       <p className="mt-6 text-sm text-gray-600">
-        Don’t have an account?{" "}
+        Don&apos;t have an account?{" "}
         <Link href="/register" className="underline hover:text-black">
           Register
         </Link>

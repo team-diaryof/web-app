@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import Logo from "@/public/logo-landscape-white.png";
+import Button from "../ui/button";
+import { useRouter } from "next/navigation";
 const navLinks = [
     { name: "Samples", href: "/" },
     { name: "Testimonials", href: "/" },
@@ -45,6 +47,15 @@ const linkVariants: Variants = {
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const router = useRouter();
+
+    const handleNavigation = (href: string) => {
+        setIsOpen(false);
+        // Navigate after animation completes (400ms as per navVariants exit duration)
+        setTimeout(() => {
+            router.push(href);
+        }, 500);
+    };
 
     return (
         <nav className="relative flex w-full justify-between items-center p-4 md:px-32">
@@ -70,9 +81,9 @@ const Navbar = () => {
                         {item.name}
                     </Link>
                 ))}
-                <Link href="/login" className="btn-primary">
+                <Button href="/register">
                     Try It Now
-                </Link>
+                </Button>
             </div>
 
             <AnimatePresence>
@@ -89,14 +100,13 @@ const Navbar = () => {
                                 <motion.div
                                     key={index}
                                     variants={linkVariants}
-                                    onClick={() => setIsOpen(false)}
                                 >
-                                    <Link
-                                        href={item.href}
-                                        className="text-4xl uppercase font-medium hover:text-gray-500 transition-colors"
+                                    <button
+                                        onClick={() => handleNavigation(item.href)}
+                                        className="text-4xl font-medium hover:text-gray-500 transition-colors"
                                     >
                                         {item.name}
-                                    </Link>
+                                    </button>
                                 </motion.div>
                             )
                         )}

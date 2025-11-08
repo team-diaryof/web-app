@@ -1,9 +1,15 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import Link from "next/link";
+import AnimatePageWrapper from "@/components/animations/animate-page-wrapper";
+import Button from "@/components/ui/button";
+import Input from "@/components/ui/input";
+import Loading from "@/components/ui/loading";
 import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import { FormEvent, useState } from "react";
+import googleImage from "@/public/google.png";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -17,52 +23,85 @@ export default function RegisterPage() {
 
     try {
       await axios.post("/api/v1/auth/register", form);
-      setStatus("success");
+      setTimeout(() => {
+        setStatus("success");
+      }, 2000);
     } catch {
       setStatus("error");
       setError("Failed to register. Try again.");
     } finally {
-      setTimeout(() => setStatus("idle"), 4000);
+      setTimeout(() => {
+        setStatus("idle");
+      }, 4000);
     }
   };
 
-  return (
-    <div className="text-center">
-      <h1 className="text-3xl font-serif mb-6">Create Account</h1>
-      <p className="text-gray-600 mb-8">Join our community today</p>
+  const handleGoogleSignIn = () => {
+    // Implement Google OAuth flow
+    window.location.href = "/api/v1/auth/google";
+  };
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <input
+  return (
+    <AnimatePageWrapper className="">
+      <motion.header layout className="flex items-center flex-col">
+        <h1 className="text-3xl font-serif mb-4">Create Account</h1>
+        <p className="text-gray-600 mb-2">Join our community today</p>
+      </motion.header>
+
+      <AnimatePresence mode="wait">
+        {(status === "error" || status === "success") && (
+          <motion.p
+            key={status}
+            initial={{ opacity: 0, height: 0, marginTop: 0, marginBottom: 0 }}
+            animate={{ opacity: 1, height: "auto", marginTop: 8, marginBottom: 16 }}
+            exit={{ opacity: 0, height: 0, marginTop: 0, marginBottom: 0 }}
+            transition={{ duration: 0.3 }}
+            className={`text-sm text-center p-2 overflow-hidden ${
+              status === "error" ? "text-red-600 bg-red-50" : "text-green-600 bg-green-50"
+            }`}
+          >
+            {status === "error"
+              ? error ?? "Something went wrong."
+              : "Welcome! Check your inbox to verify your email."}
+          </motion.p>
+        )}
+      </AnimatePresence>
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <Input
           type="text"
-          placeholder="Full name"
+          label="Full Name"
+          placeholder="Enter your full name"
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
           required
-          className="w-full rounded-full border border-gray-300 px-5 py-3 outline-none focus:ring-2 focus:ring-gray-800 transition"
+          disabled={status === "loading"}
         />
 
-        <input
+        <Input
           type="email"
-          placeholder="Email address"
+          label="Email Address"
+          placeholder="Enter your email"
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           required
-          className="w-full rounded-full border border-gray-300 px-5 py-3 outline-none focus:ring-2 focus:ring-gray-800 transition"
+          disabled={status === "loading"}
         />
 
-        <input
+        <Input
           type="password"
-          placeholder="Password"
+          label="Password"
+          placeholder="Enter your password"
           value={form.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
           required
-          className="w-full rounded-full border border-gray-300 px-5 py-3 outline-none focus:ring-2 focus:ring-gray-800 transition"
+          disabled={status === "loading"}
         />
 
-        <button
-          type="submit"
+        <Button
+          variant="primary"
+          className="w-full h-12 justify-center mt-6"
           disabled={status === "loading"}
-          className="w-full rounded-full bg-black text-white py-3 font-medium transition hover:bg-gray-800"
         >
           <AnimatePresence mode="wait">
             <motion.span
@@ -72,19 +111,39 @@ export default function RegisterPage() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
             >
-              {status === "loading"
-                ? "Creating..."
-                : status === "success"
-                ? "Account Created!"
-                : "Register"}
+              {status === "loading" ? (
+                <Loading size="sm" />
+              ) : status === "success" ? (
+                "Account Created!"
+              ) : status === "error" ? (
+                "Try again"
+              ) : (
+                "Register"
+              )}
             </motion.span>
           </AnimatePresence>
-        </button>
+        </Button>
 
-        {status === "error" && (
-          <p className="text-sm text-red-500 mt-2">{error}</p>
-        )}
       </form>
+
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-gray-300"></div>
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="px-2 bg-white text-gray-500">Or continue with</span>
+        </div>
+      </div>
+
+      <Button
+        variant="secondary"
+        className="w-full flex items-center h-12 justify-center gap-3"
+        onClick={handleGoogleSignIn}
+        disabled={status === "loading"}
+      >
+        <Image src={googleImage} className="size-8" alt="google-image" />
+        Sign up with Google
+      </Button>
 
       <p className="mt-6 text-sm text-gray-600">
         Already have an account?{" "}
@@ -92,6 +151,6 @@ export default function RegisterPage() {
           Login
         </Link>
       </p>
-    </div>
+    </AnimatePageWrapper>
   );
 }
