@@ -1,37 +1,21 @@
 "use client"
 import banner from "@/public/hero-banner-1.png"
-import { motion, Variants } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { containerVariants, itemVariants, fadeInVariants } from '@/lib/animations'
 
-const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.25
-        }
-    }
-}
-const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            duration: 0.6,
-            ease: "easeInOut"
-        }
-    }
-}
-
-const FirstSection = () => {
+const BannerSection = () => {
     return (
-        <div className="flex max-md:flex-col-reverse justify-between max-w-5xl mx-auto py-10 md:py-20 max-md:px-6 gap-6">
-            <div className="w-full flex flex-col gap-8 justify-center">
+        <div className="flex max-md:flex-col-reverse justify-between max-w-6xl w-full mx-auto py-10 md:py-20 max-md:px-6 gap-6">
+            <motion.div 
+                className="w-full flex flex-col gap-8 justify-center"
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.3 }}
+            >
                 <motion.div
                     variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
                     className="text-5xl leading-tight font-semibold"
                 >
                     <motion.h1 variants={itemVariants} className="block">
@@ -49,25 +33,31 @@ const FirstSection = () => {
                 </motion.div>
 
                 <motion.p
+                    variants={itemVariants}
                     className="text-gray-700 max-w-md"
                 >
                     Record your thoughts, experiences, and memories in a chronologically organized journal.
                 </motion.p>
 
-                <button
+                <motion.button
+                    variants={itemVariants}
                     className="btn-primary w-fit"
                 >
                     Try It Now
-                </button>
-            </div>
+                </motion.button>
+            </motion.div>
 
-            <div
+            <motion.div
+                variants={fadeInVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.3 }}
                 className="w-full font-playfair flex items-center justify-center"
             >
                 <Image src={banner} className='w-[200px] md:w-[400px]' alt="Newsletter" />
-            </div>
+            </motion.div>
         </div>
     )
 }
 
-export default FirstSection
+export default BannerSection

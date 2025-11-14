@@ -1,20 +1,18 @@
 "use client";
 
+import Logo from "@/public/logo-landscape-white.png";
+import { useAuthStore } from "@/store/user";
 import { ListIcon, XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import Logo from "@/public/logo-landscape-white.png";
-import Button from "../ui/button";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Button from "../ui/button";
 const navLinks = [
-    { name: "Samples", href: "/" },
-    { name: "Testimonials", href: "/" },
-    { name: "Contacts", href: "/" },
-    { name: "Log In", href: "/login" },
+    { name: "Newsletter", href: "/newsletter" },
+    { name: "Contacts", href: "/contact" },
 ];
-
 const navVariants: Variants = {
     hidden: { x: "100%" },
     visible: {
@@ -47,11 +45,22 @@ const linkVariants: Variants = {
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const { isAuthenticated } = useAuthStore();
     const router = useRouter();
+
+    const allNavLinks = [
+        ...navLinks,
+        ...(isAuthenticated 
+            ? [{ name: "Dashboard", href: "/dashboard" }]
+            : [
+                { name: "Log In", href: "/login" },
+                { name: "Register", href: "/register" }
+            ]
+        )
+    ];
 
     const handleNavigation = (href: string) => {
         setIsOpen(false);
-        // Navigate after animation completes (400ms as per navVariants exit duration)
         setTimeout(() => {
             router.push(href);
         }, 500);
@@ -81,9 +90,25 @@ const Navbar = () => {
                         {item.name}
                     </Link>
                 ))}
-                <Button href="/register">
-                    Try It Now
-                </Button>
+                {
+                    isAuthenticated ?
+
+                        <Button href="/dashboard">
+                            Dashboard
+
+                        </Button> :
+                        <>
+                            <Link
+                                href="/login"
+                                className="hover:text-gray-500 transition-colors"
+                            >
+                                Log In
+                            </Link>
+                            <Button href="/register">
+                                Try It Now
+                            </Button>
+                        </>
+                }
             </div>
 
             <AnimatePresence>
@@ -95,7 +120,7 @@ const Navbar = () => {
                         exit="exit"
                         className="fixed top-0 right-0 h-screen w-full bg-gray-100 text-black flex flex-col items-start pt-[100px] gap-4 px-4 z-40"
                     >
-                        {[...navLinks, { name: "Register", href: "/register" }].map(
+                        {allNavLinks.map(
                             (item, index) => (
                                 <motion.div
                                     key={index}

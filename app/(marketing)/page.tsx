@@ -1,16 +1,20 @@
-import AnimatePageWrapper from '@/components/animations/animate-page-wrapper'
-import Navbar from '@/components/layout/navbar'
+import AnimatePageWrapper from '@/components/wrapper/animate-page-wrapper'
+import Footer from '@/components/sections/footer'
+import Navbar from '@/components/sections/navbar'
 import AboutSection from '@/components/sections/landing-page/about-us'
-import FirstSection from '@/components/sections/landing-page/first-section'
+import BannerSection from '@/components/sections/landing-page/banner-section'
 import PriceSection from '@/components/sections/landing-page/price-section'
+import MapLazy from '@/components/sections/landing-page/map-lazy'
 
 const LandingPage = () => {
     return (
         <AnimatePageWrapper>
             <Navbar />
-            <FirstSection />
+            <BannerSection />
             <AboutSection />
             <PriceSection />
+            <MapLazy />
+            <Footer />
         </AnimatePageWrapper>
     )
 }

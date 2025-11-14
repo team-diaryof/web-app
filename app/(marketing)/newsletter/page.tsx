@@ -1,6 +1,6 @@
 "use client"
 
-import AnimatePageWrapper from "@/components/animations/animate-page-wrapper"
+import AnimatePageWrapper from "@/components/wrapper/animate-page-wrapper"
 import Button from "@/components/ui/button"
 import Loading from "@/components/ui/loading"
 import { PaperPlaneTiltIcon, ThumbsUpIcon, WarningIcon } from "@phosphor-icons/react"

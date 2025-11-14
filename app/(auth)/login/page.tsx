@@ -1,40 +1,50 @@
 "use client";
 
-import AnimatePageWrapper from "@/components/animations/animate-page-wrapper";
+import AnimatePageWrapper from "@/components/wrapper/animate-page-wrapper";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import Loading from "@/components/ui/loading";
+import { useAuthStore } from "@/store/user";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import googleImage from "@/public/google.png";
+import { authServices } from "@/services/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const { setAuth } = useAuthStore();
+  const router = useRouter();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
     setStatus("loading");
-
-    try {
-      await axios.post("/api/v1/auth/login", { email, password });
-      setTimeout(() => {
-        setStatus("success");
-      }, 2000);
-    } catch {
+    const { success, token, user } = await authServices.login(email, password);
+    if (!success || !token || !user) {
       setStatus("error");
       setError("Invalid credentials. Try again.");
-    } finally {
-      setTimeout(() => {
-        setStatus("idle");
-      }, 4000);
+      setStatus("error");
+      setError("Invalid credentials. Try again.");
+      return;
     }
+
+    // Set cookie for middleware
+    setAuth(token, user);
+    document.cookie = `auth-token=${token}; path=/; max-age=${60 * 60}` // 1 hour
+    setStatus("success");
+
+    setTimeout(() => {
+      setStatus("idle");
+      router.push("/dashboard");
+    }, 1000);
+
   };
 
   const handleGoogleSignIn = () => {
@@ -57,9 +67,8 @@ export default function LoginPage() {
             animate={{ opacity: 1, height: "auto", marginTop: 8, marginBottom: 16 }}
             exit={{ opacity: 0, height: 0, marginTop: 0, marginBottom: 0 }}
             transition={{ duration: 0.3 }}
-            className={`text-sm text-center p-2 overflow-hidden ${
-              status === "error" ? "text-red-600 bg-red-50" : "text-green-600 bg-green-50"
-            }`}
+            className={`text-sm text-center p-2 overflow-hidden ${status === "error" ? "text-red-600 bg-red-50" : "text-green-600 bg-green-50"
+              }`}
           >
             {status === "error"
               ? error ?? "Something went wrong."
@@ -97,10 +106,11 @@ export default function LoginPage() {
           <AnimatePresence mode="wait">
             <motion.span
               key={status}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.25 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="block"
             >
               {status === "loading" ? (
                 <Loading size="sm" />

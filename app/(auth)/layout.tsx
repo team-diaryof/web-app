@@ -1,9 +1,10 @@
 "use client";
 
+import RouteGuard from "@/components/wrapper/role-based-access";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import logo from "../../public/logo-landscape-transparent.png";
 import Link from "next/link";
+import logo from "../../public/logo-landscape-transparent.png";
 
 export default function AuthLayout({
   children,
@@ -11,7 +12,8 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-white">
+    <RouteGuard requireAuth={false}>
+      <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-white">
       <div className="hidden md:flex md:w-1/2 h-screen flex-col justify-center items-center bg-gray-100 p-12">
         <motion.div
           initial={{ opacity: 0 }}
@@ -51,5 +53,6 @@ export default function AuthLayout({
         </div>
       </div>
     </div>
+    </RouteGuard>
   );
 }

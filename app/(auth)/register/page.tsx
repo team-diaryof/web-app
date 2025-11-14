@@ -1,13 +1,15 @@
 "use client";
 
-import AnimatePageWrapper from "@/components/animations/animate-page-wrapper";
+import AnimatePageWrapper from "@/components/wrapper/animate-page-wrapper";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import Loading from "@/components/ui/loading";
+import { useAuthStore } from "@/store/user";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import googleImage from "@/public/google.png";
 
@@ -15,6 +17,8 @@ export default function RegisterPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const { setAuth } = useAuthStore();
+  const router = useRouter();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -22,16 +26,33 @@ export default function RegisterPage() {
     setStatus("loading");
 
     try {
-      await axios.post("/api/v1/auth/register", form);
+      const response = await axios.post("https://diaryof-backend.onrender.com/auth/register", form);
+      const { token, user } = response.data;
+      
+      // Store auth data
+      setAuth(token, user);
+      
+      // Set cookie for middleware
+      document.cookie = `auth-token=${token}; path=/; max-age=${60 * 60}`
+      
+      await new Promise((r) => setTimeout(r, 900));
+      setStatus("success");
+      
+      // Redirect to dashboard after success
       setTimeout(() => {
-        setStatus("success");
-      }, 2000);
-    } catch {
+        router.push("/dashboard");
+      }, 1000);
+    } catch (err) {
       setStatus("error");
-      setError("Failed to register. Try again.");
+      const errorMessage = axios.isAxiosError(err) 
+        ? err.response?.data?.message 
+        : "Failed to register. Try again.";
+      setError(errorMessage);
     } finally {
       setTimeout(() => {
-        setStatus("idle");
+        if (status !== "success") {
+          setStatus("idle");
+        }
       }, 4000);
     }
   };
@@ -106,10 +127,11 @@ export default function RegisterPage() {
           <AnimatePresence mode="wait">
             <motion.span
               key={status}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.25 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="block"
             >
               {status === "loading" ? (
                 <Loading size="sm" />
