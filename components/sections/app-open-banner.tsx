@@ -15,9 +15,6 @@ function isAndroid(ua: string) {
   return /Android/i.test(ua);
 }
 
-function stripLeadingSlash(path: string) {
-  return path.startsWith("/") ? path.slice(1) : path;
-}
 
 export default function AppOpenBanner() {
   const [visible, setVisible] = useState(false);
@@ -64,11 +61,9 @@ export default function AppOpenBanner() {
     setVisible(false);
   };
 
-  // Build a deep link that mirrors the current web path and query
+  // Build a deep link that always opens the profile page in the app
   const buildAppUrl = () => {
-    const { pathname, search, hash } = window.location;
-    const path = stripLeadingSlash(pathname); // expo-router expects no leading slash
-    return `${appScheme}${path}${search || ""}${hash || ""}`;
+    return `${appScheme}profile`;
   };
 
   const handleOpenInApp = () => {
@@ -99,10 +94,8 @@ export default function AppOpenBanner() {
       // Prefer Android intent on Chrome for better fallback behavior
       if (isAndroid(ua) && /Chrome/i.test(ua)) {
         const schemeNoSuffix = appScheme.replace("://", "");
-        const { pathname, search, hash } = window.location;
-        const pathNoSlash = stripLeadingSlash(pathname);
         const intentUrl =
-          `intent://${pathNoSlash}${search || ""}${hash || ""}` +
+          `intent://profile` +
           `#Intent;scheme=${schemeNoSuffix};package=${androidPackage};S.browser_fallback_url=${encodeURIComponent(siteFallback)};end`;
         window.location.href = intentUrl;
       } else {
