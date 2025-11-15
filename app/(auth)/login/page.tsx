@@ -1,50 +1,57 @@
 "use client";
 
-import AnimatePageWrapper from "@/components/wrapper/animate-page-wrapper";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
 import Loading from "@/components/ui/loading";
+import AnimatePageWrapper from "@/components/wrapper/animate-page-wrapper";
+import googleImage from "@/public/google.png";
+import { authServices } from "@/services/auth";
 import { useAuthStore } from "@/store/user";
-import axios from "axios";
+import { useNotificationStore } from "@/store/in-app-notification";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import googleImage from "@/public/google.png";
-import { authServices } from "@/services/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<"idle" | "loading">("idle");
   const { setAuth } = useAuthStore();
+  const { addNotification } = useNotificationStore();
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError(null);
     setStatus("loading");
+
     const { success, token, user } = await authServices.login(email, password);
+
     if (!success || !token || !user) {
-      setStatus("error");
-      setError("Invalid credentials. Try again.");
-      setStatus("error");
-      setError("Invalid credentials. Try again.");
+      setStatus("idle");
+      addNotification({
+        type: "error",
+        message: "Invalid credentials. Please try again.",
+        duration: 3000,
+      });
       return;
     }
 
     // Set cookie for middleware
     setAuth(token, user);
-    document.cookie = `auth-token=${token}; path=/; max-age=${60 * 60}` // 1 hour
-    setStatus("success");
+    document.cookie = `auth-token=${token}; path=/; max-age=${60 * 60}`; // 1 hour
+
+    addNotification({
+      type: "success",
+      message: "Welcome back! Redirecting to dashboard...",
+      duration: 3000,
+    });
 
     setTimeout(() => {
       setStatus("idle");
       router.push("/dashboard");
     }, 1000);
-
   };
 
   const handleGoogleSignIn = () => {
@@ -54,28 +61,10 @@ export default function LoginPage() {
 
   return (
     <AnimatePageWrapper className="">
-      <motion.header layout className="flex items-center flex-col">
+      <motion.header className="flex items-center flex-col">
         <h1 className="text-3xl font-serif mb-4">Welcome Back</h1>
         <p className="text-gray-600 mb-2">Log in to your account</p>
       </motion.header>
-
-      <AnimatePresence mode="wait">
-        {(status === "error" || status === "success") && (
-          <motion.p
-            key={status}
-            initial={{ opacity: 0, height: 0, marginTop: 0, marginBottom: 0 }}
-            animate={{ opacity: 1, height: "auto", marginTop: 8, marginBottom: 16 }}
-            exit={{ opacity: 0, height: 0, marginTop: 0, marginBottom: 0 }}
-            transition={{ duration: 0.3 }}
-            className={`text-sm text-center p-2 overflow-hidden ${status === "error" ? "text-red-600 bg-red-50" : "text-green-600 bg-green-50"
-              }`}
-          >
-            {status === "error"
-              ? error ?? "Something went wrong."
-              : "Welcome back! Check your inbox or continue."}
-          </motion.p>
-        )}
-      </AnimatePresence>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <Input
@@ -112,15 +101,7 @@ export default function LoginPage() {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="block"
             >
-              {status === "loading" ? (
-                <Loading size="sm" />
-              ) : status === "success" ? (
-                "Signed in!"
-              ) : status === "error" ? (
-                "Try again"
-              ) : (
-                "Login"
-              )}
+              {status === "loading" ? <Loading size="sm" /> : "Login"}
             </motion.span>
           </AnimatePresence>
         </Button>

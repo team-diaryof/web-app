@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AppOpenBanner from "@/components/sections/app-open-banner";
+import NotificationContainer from "@/components/sections/notification-container";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans font-medium tracking-wider `}
       >
         {children}
+        <NotificationContainer />
       </body>
     </html>
   );

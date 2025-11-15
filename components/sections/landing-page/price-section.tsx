@@ -1,9 +1,10 @@
 "use client"
-import React from 'react'
+import React, { use } from 'react'
 import { Check } from 'lucide-react'
 import Button from '@/components/ui/button'
 import { motion } from 'framer-motion'
 import { containerVariants, itemVariants } from '@/lib/animations'
+import { useAuthStore } from '@/store/user'
 
 const features = [
   'Access to our 150+ video library',
@@ -16,6 +17,7 @@ const features = [
 
 
 const PriceSection = () => {
+  const { isAuthenticated } = useAuthStore();
   return (
     <section id="pricing" className="py-32">
       <div className="max-w-4xl mx-auto px-6 text-center">
@@ -77,7 +79,13 @@ const PriceSection = () => {
             </ul>
 
             <div className="relative mt-10 flex items-center justify-center">
-              <Button className="px-6 py-3">Try It Now</Button>
+              {
+                isAuthenticated ? (
+                  <Button className="w-fit" href="/dashboard">Go to Dashboard</Button>
+                ) : (
+                  <Button className="w-fit" href="/register">Try It Now</Button>
+                )
+              }
             </div>
           </div>
         </motion.div>

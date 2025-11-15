@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react'
 import { cn } from '@/lib/utils';
-interface ButtonProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children: React.ReactNode;
     onClick?: () => void;
     className?: string;
@@ -22,7 +22,7 @@ const sizeStyles = {
     lg: 'p-4 px-8 text-lg',
 }
 
-const Button = ({ children, onClick, className, variant = 'primary', href, disabled, size = "md" }: ButtonProps) => {
+const Button = ({ children, onClick, className, variant = 'primary', href, disabled, size = "md", ...props }: ButtonProps) => {
     if (href) {
         return (
             <Link href={href} className={`btn ${variantStyles[variant]} ${sizeStyles[size]} ${className}`} onClick={onClick}>
@@ -31,7 +31,7 @@ const Button = ({ children, onClick, className, variant = 'primary', href, disab
         )
     }
     return (
-        <button onClick={onClick} className={cn("cursor-pointer", variantStyles[variant], sizeStyles[size], className)} disabled={disabled}>
+        <button onClick={onClick} className={cn("cursor-pointer", variantStyles[variant], sizeStyles[size], className)} disabled={disabled} {...props}>
             {children}
         </button>
     )

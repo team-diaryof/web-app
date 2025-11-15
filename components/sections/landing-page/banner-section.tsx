@@ -3,11 +3,14 @@ import banner from "@/public/hero-banner-1.png"
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { containerVariants, itemVariants, fadeInVariants } from '@/lib/animations'
+import Button from "@/components/ui/button"
+import { useAuthStore } from "@/store/user"
 
 const BannerSection = () => {
+    const isAuthenticated = useAuthStore()
     return (
         <div className="flex max-md:flex-col-reverse justify-between max-w-6xl w-full mx-auto py-10 md:py-20 max-md:px-6 gap-6">
-            <motion.div 
+            <motion.div
                 className="w-full flex flex-col gap-8 justify-center"
                 variants={containerVariants}
                 initial="hidden"
@@ -39,12 +42,21 @@ const BannerSection = () => {
                     Record your thoughts, experiences, and memories in a chronologically organized journal.
                 </motion.p>
 
-                <motion.button
-                    variants={itemVariants}
-                    className="btn-primary w-fit"
-                >
-                    Try It Now
-                </motion.button>
+                {
+                    isAuthenticated ?
+                        <Button
+                            className="w-fit"
+                            href="/dashboard"
+                        >
+                            Go to Dashboard
+                        </Button> :
+                        <Button
+                            className="w-fit"
+                            href="/register"
+                        >
+                            Try It Now
+                        </Button>
+                }
             </motion.div>
 
             <motion.div

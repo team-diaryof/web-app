@@ -3,8 +3,8 @@
 import AnimatePageWrapper from "@/components/wrapper/animate-page-wrapper";
 import Button from "@/components/ui/button";
 import Input from "@/components/ui/input";
-import Loading from "@/components/ui/loading";
-import { useAuthStore } from "@/store/user";
+import { useNotificationStore } from "@/store/in-app-notification";
+import { authServices } from "@/services/auth";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
@@ -14,11 +14,15 @@ import { FormEvent, useState } from "react";
 import googleImage from "@/public/google.png";
 
 export default function RegisterPage() {
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    name: "",
+  });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
-  const { setAuth } = useAuthStore();
   const router = useRouter();
+  const { addNotification } = useNotificationStore();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -26,28 +30,42 @@ export default function RegisterPage() {
     setStatus("loading");
 
     try {
-      const response = await axios.post("https://diaryof-backend.onrender.com/auth/register", form);
-      const { token, user } = response.data;
+      const result = await authServices.register(
+        formData.email,
+        formData.password,
+        formData.name || undefined
+      );
       
-      // Store auth data
-      setAuth(token, user);
-      
-      // Set cookie for middleware
-      document.cookie = `auth-token=${token}; path=/; max-age=${60 * 60}`
-      
-      await new Promise((r) => setTimeout(r, 900));
-      setStatus("success");
-      
-      // Redirect to dashboard after success
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 1000);
+      if (result.success) {
+        await new Promise((r) => setTimeout(r, 900));
+        setStatus("success");
+        addNotification({
+          message: result.message || "OTP sent to your email",
+          type: "success",
+        });
+        
+        // Redirect to OTP verification page
+        setTimeout(() => {
+          router.push(`/otp-verification?email=${encodeURIComponent(formData.email)}`);
+        }, 1000);
+      } else {
+        setStatus("error");
+        setError(result.message || "Failed to register. Try again.");
+        addNotification({
+          message: result.message || "Registration failed",
+          type: "error",
+        });
+      }
     } catch (err) {
       setStatus("error");
       const errorMessage = axios.isAxiosError(err) 
         ? err.response?.data?.message 
         : "Failed to register. Try again.";
       setError(errorMessage);
+      addNotification({
+        message: errorMessage || "Registration failed",
+        type: "error",
+      });
     } finally {
       setTimeout(() => {
         if (status !== "success") {
@@ -93,8 +111,8 @@ export default function RegisterPage() {
           type="text"
           label="Full Name"
           placeholder="Enter your full name"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          value={formData.name}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, name: e.target.value })}
           required
           disabled={status === "loading"}
         />
@@ -103,8 +121,8 @@ export default function RegisterPage() {
           type="email"
           label="Email Address"
           placeholder="Enter your email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          value={formData.email}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, email: e.target.value })}
           required
           disabled={status === "loading"}
         />
@@ -113,8 +131,8 @@ export default function RegisterPage() {
           type="password"
           label="Password"
           placeholder="Enter your password"
-          value={form.password}
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          value={formData.password}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, password: e.target.value })}
           required
           disabled={status === "loading"}
         />
@@ -134,7 +152,7 @@ export default function RegisterPage() {
               className="block"
             >
               {status === "loading" ? (
-                <Loading size="sm" />
+                "Creating Account..."
               ) : status === "success" ? (
                 "Account Created!"
               ) : status === "error" ? (

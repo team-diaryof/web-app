@@ -1,5 +1,7 @@
+"use client"
 import { Dropdown, DropdownItem } from '@/components/ui/dropdown';
 import Loading from '@/components/ui/loading';
+import { useNotificationStore } from '@/store/in-app-notification';
 import { useAuthStore } from '@/store/user';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MenuIcon } from 'lucide-react';
@@ -10,6 +12,7 @@ const NavbarDropDown = () => {
     const [logoutLoading, setLogoutLoading] = useState(false)
     const { clearAuth } = useAuthStore();
     const router = useRouter();
+    const { addNotification } = useNotificationStore();
 
     const handleLogout = async () => {
         setLogoutLoading(true);
@@ -17,6 +20,11 @@ const NavbarDropDown = () => {
             setTimeout(() => {
                 clearAuth();
                 setLogoutLoading(false);
+                addNotification({
+                    type: "success",
+                    message: "Logged out successfully.",
+                    duration: 3000,
+                });
                 router.push("/");
                 resolve();
             }, 1000);
@@ -25,6 +33,9 @@ const NavbarDropDown = () => {
 
     return (
         <Dropdown align='right' trigger={<MenuIcon className="w-6 h-6 cursor-pointer" />}>
+            <DropdownItem href='/dashboard'>
+                Dashboard
+            </DropdownItem>
             <DropdownItem href='/profile'>
                 Profile
             </DropdownItem>
