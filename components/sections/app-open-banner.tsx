@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Button from "@/components/ui/button";
 
-// 1 minute
 const rePromptIntervalMs = 60 * 1000;
 
 function isMobileUA(ua: string) {
@@ -15,19 +14,11 @@ function isAndroid(ua: string) {
   return /Android/i.test(ua);
 }
 
-
 export default function AppOpenBanner() {
   const [visible, setVisible] = useState(false);
 
-  // Use your Expo scheme from app.json ("scheme": "diaryofapp")
-  const appScheme = useMemo(() => {
-    const raw = "diaryofapp://";
-    return raw.endsWith("://") ? raw : `${raw}://`;
-  }, []);
-
-  const androidPackage = useMemo(() => {
-    return "com.sacube.diaryof";
-  }, []);
+  const appScheme = useMemo(() => "diaryofapp://", []);
+  const androidPackage = useMemo(() => "com.sacube.diaryof", []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -49,7 +40,6 @@ export default function AppOpenBanner() {
       }
     }
 
-    // Defer state update to avoid synchronous setState warning inside effect
     setTimeout(() => setVisible(true), 0);
   }, []);
 
@@ -61,10 +51,7 @@ export default function AppOpenBanner() {
     setVisible(false);
   };
 
-  // Build a deep link that always opens the profile page in the app
-  const buildAppUrl = () => {
-    return `${appScheme}profile`;
-  };
+  const buildAppUrl = () => appScheme; // opens default app route
 
   const handleOpenInApp = () => {
     if (typeof window === "undefined") return;
@@ -91,20 +78,20 @@ export default function AppOpenBanner() {
     document.addEventListener("visibilitychange", onVisibility);
 
     try {
-      // Prefer Android intent on Chrome for better fallback behavior
       if (isAndroid(ua) && /Chrome/i.test(ua)) {
         const schemeNoSuffix = appScheme.replace("://", "");
         const intentUrl =
-          `intent://profile` +
-          `#Intent;scheme=${schemeNoSuffix};package=${androidPackage};S.browser_fallback_url=${encodeURIComponent(siteFallback)};end`;
+          `intent://` +
+          `#Intent;scheme=${schemeNoSuffix};package=${androidPackage};S.browser_fallback_url=${encodeURIComponent(
+            siteFallback
+          )};end`;
+
         window.location.href = intentUrl;
       } else {
-        // iOS and other browsers: try the custom scheme
         window.location.href = appUrl;
       }
     } catch {}
 
-    // Generic fallback if app didn't open
     const timer = window.setTimeout(() => {
       if (!pageHidden) {
         window.location.assign(siteFallback);
