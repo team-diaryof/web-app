@@ -42,7 +42,11 @@ const NavbarDropDown = () => {
             <DropdownItem href='/settings'>
                 Setting
             </DropdownItem>
-            <DropdownItem className='bg-black text-white h-12' onClick={handleLogout}>
+            <DropdownItem
+                className='bg-black text-white h-12'
+                onClick={handleLogout}
+                preventClose // keep dropdown open while logging out
+            >
                 <AnimatePresence mode="wait">
                     {
                         logoutLoading ?

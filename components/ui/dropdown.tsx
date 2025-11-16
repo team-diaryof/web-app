@@ -4,7 +4,10 @@ import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { XIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState, createContext, useContext } from 'react';
+
+// New context to allow items to close the dropdown
+const DropdownContext = createContext<{ close: () => void } | null>(null);
 
 //interfaces
 interface DropdownProps {
@@ -33,7 +36,6 @@ export function Dropdown({
     className,
     menuClassName,
     mobileSlideFrom = 'right',
-    onItemClick,
 }: DropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
@@ -163,9 +165,9 @@ export function Dropdown({
                                 </button>
                             </div>
                         )}
-                        <div>
-                            {children}
-                        </div>
+                        <DropdownContext.Provider value={{ close: closeDropdown }}>
+                            <div>{children}</div>
+                        </DropdownContext.Provider>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -182,13 +184,18 @@ export function DropdownItem({
     disabled = false,
     preventClose = false,
 }: DropdownItemProps) {
-    const router = useRouter()
-    
+    const router = useRouter();
+    const ctx = useContext(DropdownContext);
+
     const handleClick = async () => {
+        if (disabled) return;
         if (href) {
             router.push(href);
         } else if (onClick) {
             await onClick();
+        }
+        if (!preventClose) {
+            ctx?.close();
         }
     };
 
