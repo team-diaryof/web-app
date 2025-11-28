@@ -1,8 +1,9 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
-import AppOpenBanner from "@/components/sections/app-open-banner";
-import NotificationContainer from "@/components/sections/notification-container";
+import UserAuthStatusCheck from "@/components/user-auth-status-check";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "The Diary Of",
+  title: "DiaryOf",
   description: "A platform for sharing and discovering personal stories",
   icons: {
     icon: "/favicon.png",
@@ -32,8 +33,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans font-medium tracking-wider `}
       >
+        <UserAuthStatusCheck />
         {children}
-        <NotificationContainer />
+        <Toaster position="top-right" />
       </body>
     </html>
   );

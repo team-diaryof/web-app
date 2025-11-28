@@ -1,40 +1,85 @@
 import Link from 'next/link';
-import React from 'react'
-import { cn } from '@/lib/utils';
+import React from 'react';
+import { cn } from '@/lib/cn';
+import Loading from './loading';
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    children: React.ReactNode;
+    children?: React.ReactNode;
     onClick?: () => void;
     className?: string;
-    variant?: 'primary' | 'secondary' | 'outlined';
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'link';
     href?: string;
     disabled?: boolean;
-    size?: 'sm' | 'md' | 'lg';
-}   
+    loading?: boolean;
+    fullWidth?: boolean;
+    size?: "xs" | 'sm' | 'md' | 'lg' | 'icon';
+}
+
+const baseStyles = "inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none";
 
 const variantStyles = {
-    primary: 'bg-black w-fit text-white font-playfair rounded-full',
-    secondary: 'bg-gray-100 w-fit text-black font-playfair rounded-full',
-    outlined: 'border-1 border-black w-fit text-black font-playfair rounded-full',
-}
-const sizeStyles = {
-    sm: 'p-2 px-4 text-sm',
-    md: 'p-3 px-6 text-md',
-    lg: 'p-4 px-8 text-lg',
-}
+    primary: 'hover:bg-zinc-900 text-zinc-50 bg-zinc-900/90 shadow-sm',
+    secondary: 'bg-zinc-100 text-zinc-900 hover:bg-zinc-200/80',
+    outline: 'border border-zinc-200 bg-white hover:bg-zinc-100 hover:text-zinc-900 text-zinc-900',
+    ghost: 'hover:bg-zinc-100 hover:text-zinc-900 text-zinc-600',
+    destructive: 'bg-red-500 text-zinc-50 hover:bg-red-500/90 shadow-sm',
+    link: 'text-zinc-900 underline-offset-4 hover:underline p-0 h-auto rounded-none',
+};
 
-const Button = ({ children, onClick, className, variant = 'primary', href, disabled, size = "md", ...props }: ButtonProps) => {
-    if (href) {
+const sizeStyles = {
+    xs: 'h-7 px-3 text-xs',
+    sm: 'h-9 px-4 text-xs',
+    md: 'h-11 px-6',
+    lg: 'h-14 px-8 text-base',
+    icon: 'h-10 w-10', 
+};
+
+const Button = ({
+    children,
+    onClick,
+    className,
+    variant = 'primary',
+    href,
+    disabled,
+    loading = false,
+    fullWidth = false,
+    size = "md",
+    ...props
+}: ButtonProps) => {
+
+    const compClasses = cn(
+        baseStyles,
+        sizeStyles[size],
+        variantStyles[variant],
+        fullWidth ? "w-full" : "w-fit",
+        className
+    );
+
+    if (href && !disabled && !loading) {
         return (
-            <Link href={href} className={`btn ${variantStyles[variant]} ${sizeStyles[size]} ${className}`} onClick={onClick}>
+            <Link href={href} className={compClasses} onClick={onClick}>
                 {children}
             </Link>
-        )
+        );
     }
-    return (
-        <button onClick={onClick} className={cn("cursor-pointer", variantStyles[variant], sizeStyles[size], className)} disabled={disabled} {...props}>
-            {children}
-        </button>
-    )
-}
 
-export default Button
+    return (
+        <button
+            onClick={onClick}
+            className={compClasses}
+            disabled={disabled || loading}
+            {...props}
+        >
+            {loading ? (
+                <div className="flex items-center gap-2">
+                    <Loading size="xs" dark={variant === 'secondary' || variant === 'outline' || variant === 'ghost'} />
+                    <span className="opacity-70">{children}</span>
+                </div>
+            ) : (
+                children
+            )}
+        </button>
+    );
+};
+
+export default Button;

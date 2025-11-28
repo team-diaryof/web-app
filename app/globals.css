@@ -2,6 +2,10 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -17,7 +21,6 @@
     @apply bg-black w-fit text-white font-playfair rounded-full p-3 px-6
   }
 }
-
 
 @media (prefers-color-scheme: dark) {
   :root {

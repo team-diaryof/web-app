@@ -1,3 +1,4 @@
+// app/api/v1/send-email/route.ts
 import sendEmail from '@/lib/email';
 import { NextResponse } from 'next/server';
 

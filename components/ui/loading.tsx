@@ -1,21 +1,24 @@
+// components/ui/loading.tsx
 "use client";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import { motion } from "framer-motion";
 
 interface LoadingProps {
+  dark?: boolean;
   size?: "xs" | "sm" | "md" | "lg";
   text?: string;
   className?: string;
 }
 
 const sizeStyles = {
-  xs: "w-3 h-3 border-2",
-  sm: "w-4 h-4 border-2",
-  md: "w-6 h-6 border-2",
-  lg: "w-10 h-10 border-[3px]",
+  xs: "size-3 border-2",
+  sm: "size-4 border-[3px]",
+  md: "size-6 border-[4px]",
+  lg: "size-8 border-[6px]",
 };
 
 const Loading = ({
+  dark = false,
   size = "md",
   text,
   className,
@@ -30,9 +33,10 @@ const Loading = ({
           ease: "linear",
         }}
         className={cn(
-          "rounded-full border-solid border-inherit border-t-transparent",
+          className,
+          "rounded-full border-solid border-inherit",
+          dark ? "border-t-zinc-500" : "border-t-zinc-300",
           sizeStyles[size],
-          className
         )}
       />
       {text && <span className="font-playfair text-base">{text}</span>}

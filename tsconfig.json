@@ -25,7 +25,19 @@
     "paths": {
       "@/*": [
         "./*"
-      ]
+      ],
+      "@/components/*": ["./components/*"],
+      "@/ui/*": ["./components/ui/*"],
+      "@/layout/*": ["./components/layout/*"],
+      "@/features/*": ["./components/features/*"],
+      "@/providers/*": ["./components/providers/*"],
+      "@/animations/*": ["./components/animations/*"],
+      "@/hooks/*": ["./hooks/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/types/*": ["./types/*"],
+      "@/store/*": ["./store/*"],
+      "@/mocks/*": ["./mocks/*"],
+      "@/services/*": ["./services/*"]
     }
   },
   "include": [

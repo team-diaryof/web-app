@@ -1,22 +1,48 @@
+// services/auth.ts
+import { User } from "@/types";
 import axios from "axios";
 
-const BASE_URL = "https://diaryof-backend.onrender.com";
+const api = axios.create({
+  baseURL: "https://diaryof-backend.onrender.com/api/v1",
+  timeout: 10000,
+});
+
+interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  message?: string;
+}
+
+const getErrorMessage = (err: unknown) => {
+  if (axios.isAxiosError(err)) {
+    return (
+      err.response?.data?.message ||
+      err.response?.data?.error ||
+      "Something went wrong"
+    );
+  }
+  return "Something went wrong";
+};
 
 export const authServices = {
   login: async (
     email: string,
     password: string
-  ): Promise<{ success: boolean; token?: string; user?: User }> => {
+  ): Promise<ApiResponse<{ token: string; user: User }>> => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/v1/auth/login`, {
+      const response = await api.post(`/auth/login`, {
         email,
         password,
       });
-      const { token, user } = response.data;
-      return { success: true, token, user };
+      return {
+        success: true,
+        data: {
+          token: response.data.token,
+          user: response.data.user,
+        },
+      };
     } catch (err) {
-      console.log(err);
-      return { success: false };
+      return { success: false, message: getErrorMessage(err) };
     }
   },
 
@@ -26,20 +52,16 @@ export const authServices = {
     name?: string
   ): Promise<{ success: boolean; message?: string }> => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/v1/auth/register`, {
+      const response = await api.post(`/auth/register`, {
         email,
         password,
         name,
       });
       return { success: true, message: response.data.message };
     } catch (err: unknown) {
-      console.log(err);
-      const message = axios.isAxiosError(err)
-        ? err.response?.data?.message || "Registration failed"
-        : "Registration failed";
       return {
         success: false,
-        message,
+        message: getErrorMessage(err),
       };
     }
   },
@@ -47,42 +69,39 @@ export const authServices = {
   verifyOTP: async (
     email: string,
     otp: string
-  ): Promise<{ success: boolean; token?: string; user?: User; message?: string }> => {
+  ): Promise<
+    ApiResponse<{
+      token: string;
+      user: User;
+    }>
+  > => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/v1/auth/verify-otp`, {
+      const response = await api.post(`/auth/verify-otp`, {
         email,
         otp,
       });
       const { token, user } = response.data;
-      return { success: true, token, user };
+      return { success: true, data: { token, user } };
     } catch (err: unknown) {
-      console.log(err);
-      const message = axios.isAxiosError(err)
-        ? err.response?.data?.message || "OTP verification failed"
-        : "OTP verification failed";
       return {
         success: false,
-        message,
+        message: getErrorMessage(err),
       };
     }
   },
 
   resendOTP: async (
     email: string
-  ): Promise<{ success: boolean; message?: string }> => {
+  ): Promise<ApiResponse<{ success: boolean; message?: string }>> => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/v1/auth/resend-otp`, {
+      const response = await api.post(`/auth/resend-otp`, {
         email,
       });
       return { success: true, message: response.data.message };
     } catch (err: unknown) {
-      console.log(err);
-      const message = axios.isAxiosError(err)
-        ? err.response?.data?.message || "Failed to resend OTP"
-        : "Failed to resend OTP";
       return {
         success: false,
-        message,
+        message: getErrorMessage(err),
       };
     }
   },

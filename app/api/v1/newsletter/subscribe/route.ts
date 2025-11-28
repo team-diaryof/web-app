@@ -1,3 +1,4 @@
+// app/api/v1/newsletter/subscribe/route.ts
 import { NextResponse } from "next/server";
 
 export const POST = async (request: Request) => {

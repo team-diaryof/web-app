@@ -1,58 +1,25 @@
-"use client";
-
-import RouteGuard from "@/components/wrapper/role-based-access";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import logo from "../../public/logo-landscape-transparent.png";
+// app/(auth)/layout.tsx
+import AuthProvider from "@/components/auth-provider";
+import BackHeader from "@/components/back-header";
+import Navbar from "@/components/navbar";
 
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  
   return (
-    <RouteGuard requireAuth={false}>
-      <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-white">
-      <div className="hidden md:flex md:w-1/2 h-screen flex-col justify-center items-center bg-gray-100 p-12">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, ease: "easeInOut" }}
-          className="text-center"
-        >
-          <Image
-            src={logo}
-            alt="Logo"
-            width={1200}
-            className="mb-4 w-[400px] mx-auto"
-            priority
-          />
-          <h1 className="text-4xl text-black font-serif mb-4">Welcome Back!</h1>
-          <p className="text-gray-800 max-w-md text-center">
-            Sign in or create an account to stay updated with our latest stories,
-            events, and curated wine journeys.
-          </p>
-        </motion.div>
-      </div>
-
-      <div className="flex-col flex-1 flex md:items-center md:justify-center w-full px-8 py-10 md:py-16">
-        <Link href="/">
-          <Image
-            src={logo}
-            alt="Logo"
-            width={1200}
-            className="mb-8 md:hidden w-[200px] mx-auto"
-            priority
-          />
-        </Link>
+    <AuthProvider blockAuthenticated>
+      <div className="max-w-lg mx-auto min-h-screen flex flex-col items-center justify-start bg-white">
+        <BackHeader />
+        <Navbar />
         <div
-          className="w-full max-w-md"
+          className="w-full p-6 py-16"
         >
           {children}
         </div>
       </div>
-    </div>
-    </RouteGuard>
+    </AuthProvider>
   );
 }
