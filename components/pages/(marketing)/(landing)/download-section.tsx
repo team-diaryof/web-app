@@ -1,4 +1,5 @@
 "use client"
+import Loading from '@/components/ui/loading';
 import { AndroidLogoIcon } from '@phosphor-icons/react';
 import { AnimatePresence, Easing, motion, Variants } from 'framer-motion';
 import { AlertTriangle, Apple, Check, Download, Loader2 } from 'lucide-react';
@@ -92,7 +93,7 @@ const AppFeaturesSection = () => {
 
 
   return (
-    <div id='download' className="w-full max-w-6xl mx-auto px-6 py-20 ">
+    <div id='download' className="w-full max-w-6xl mx-auto px-6 py-32 ">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
 
         {/* --- LEFT COLUMN: Features List --- */}
@@ -201,7 +202,7 @@ const AppFeaturesSection = () => {
                         exit={{ opacity: 0, y: -10 }}
                         className="flex items-center justify-center w-full gap-3 text-white"
                       >
-                        <Loader2 className="animate-spin" size={24} />
+                        <Loading size='md' dark />
                         <span className="font-medium">Getting things ready...</span>
                       </motion.div>
                     )}
@@ -210,8 +211,8 @@ const AppFeaturesSection = () => {
                     {downloadStatus === 'downloading' && (
                       <motion.div 
                         key="downloading"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                         className="flex items-center justify-center w-full gap-3 text-white"
                       >
                         <div className="bg-white/20 p-1 rounded-full">

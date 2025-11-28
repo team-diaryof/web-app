@@ -1,6 +1,3 @@
-// components/ui/error-page.tsx
-"use client";
-
 import {
   FileQuestion,
   Server,

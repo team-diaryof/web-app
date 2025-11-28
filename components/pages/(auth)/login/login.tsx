@@ -40,7 +40,7 @@ export default function Login() {
 
 		setTimeout(() => {
 			setStatus("idle");
-			router.push(user.role==="ADMIN" ? "/admin/dashboard" : "/app/dashboard");
+			router.push("/dashboard");
 		}, 1000);
 	};
 

@@ -180,7 +180,7 @@ const Navbar = () => {
                                     <Loading dark />
                                 </div>
                             ) : status==="authenticated" ? (
-                                <Button href="/app/dashboard" fullWidth size="lg">Dashboard</Button>
+                                <Button href="/dashboard" fullWidth size="lg">Dashboard</Button>
                             ) : (
                                 <>
                                     <Button href="/login" variant="outline" fullWidth size="lg">Log In</Button>
