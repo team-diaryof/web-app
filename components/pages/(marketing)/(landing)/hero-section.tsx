@@ -39,9 +39,10 @@ const HeroSection = () => {
                                 >
                                 {status === "authenticated" ? "Dashboard" : "Get Started"}
                             </Button>
+
                             <Button
                                 variant="ghost"
-                                href={"/help"}
+                                href={"/contact"}
                             >
                                 Need Help?
                             </Button>
@@ -68,7 +69,6 @@ const HeroSection = () => {
                     </div>
                 </div>
             </div>
-            <ArrowDown className="max-md:hidden animate-bounce bg-amber-50 rounded-full text-primary p-2" size={40} />
         </section>
     )
 }

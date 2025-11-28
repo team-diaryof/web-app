@@ -51,7 +51,6 @@ const Navbar = () => {
 
                     {/* Desktop Navigation */}
                     <motion.div
-                        layout
                         className="hidden md:flex items-center gap-8"
                     >
                         {navLinks.map((item) => (
@@ -68,7 +67,6 @@ const Navbar = () => {
                         {
                             isAuthScreens ? null :
                                 <motion.div
-                                    layout
                                     className="pl-4 border-l border-zinc-200 flex items-center justify-end min-w-[140px]"
                                 >
                                     <AnimatePresence mode="wait">
@@ -78,7 +76,6 @@ const Navbar = () => {
                                                 initial={{ opacity: 0 }}
                                                 animate={{ opacity: 1 }}
                                                 exit={{ opacity: 0 }}
-                                                layout="position"
                                                 className="flex gap-3"
                                             >
                                                 <Button className="w-20 opacity-70" variant="ghost" size="sm" disabled>
@@ -94,7 +91,6 @@ const Navbar = () => {
                                                 initial={{ opacity: 0, scale: 0.95 }}
                                                 animate={{ opacity: 1, scale: 1 }}
                                                 exit={{ opacity: 0, scale: 0.95 }}
-                                                layout="position"
                                                 className="w-full flex justify-end"
                                             >
                                                 <Button href={"/dashboard"} size="sm">
@@ -107,7 +103,6 @@ const Navbar = () => {
                                                 initial={{ opacity: 0, scale: 0.95 }}
                                                 animate={{ opacity: 1, scale: 1 }}
                                                 exit={{ opacity: 0, scale: 0.95 }}
-                                                layout="position"
                                                 className="flex gap-3"
                                             >
                                                 <Button variant="ghost" href="/login" size="sm">Log In</Button>

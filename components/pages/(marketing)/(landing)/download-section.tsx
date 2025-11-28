@@ -104,7 +104,7 @@ const AppFeaturesSection = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
-          <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-bold text-gray-900 mb-10 font-playfair">
+          <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-bold text-gray-900 mb-10">
             What to Expect
           </motion.h2>
 
@@ -147,7 +147,7 @@ const AppFeaturesSection = () => {
             <div className="absolute -right-10 -top-10 w-40 h-40 bg-gray-200 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700" />
 
             <div className="relative z-10">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4 font-playfair">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
                 Get the App
               </h2>
 

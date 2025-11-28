@@ -26,7 +26,7 @@ export default function AuthProvider({
   const didRunCheck = useRef(false);
   const cookieLoaded = useRef(false);
 
-  const redirectTo = (user?.role == "ADMIN" ? "/admin" : "/app") + "/dashboard";
+  const redirectTo = "/dashboard";
 
   useEffect(() => {
     if (_hasHydrated && !cookieLoaded.current) {
@@ -71,8 +71,7 @@ export default function AuthProvider({
 
   // Show error if authenticated user tries to access auth page
   if (blockAuthenticated && isAuthenticated) {
-    redirect((user?.role == "ADMIN" ? "/admin" : "/app") + "/dashboard");
-    return <UnifiedErrorPage forbidden message="Already logged in" />;
+    redirect("/dashboard");
   }
 
   // Wrong role after checks → show error page
