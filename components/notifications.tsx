@@ -163,7 +163,7 @@ const Notifications = () => {
               </div>
               <p className="text-zinc-500 text-sm">No new notifications</p>
               <button 
-                  onClick={() => window.location.reload()} 
+                  onClick={() => console.log('Refresh clicked')} 
                   className="mt-4 text-xs font-medium text-yellow-600 hover:text-yellow-700"
               >
                   Refresh

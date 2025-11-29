@@ -31,6 +31,7 @@ const Navbar = () => {
     }, [mobileOpen]);
 
     useEffect(() => {
+        if (typeof window === "undefined") return;
         const onScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener("scroll", onScroll);
         return () => window.removeEventListener("scroll", onScroll);
@@ -38,7 +39,11 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className={`fixed top-0 inset-x-0 z-50 bg-white transition-all duration-300 border-b ${scrolled ? "border-zinc-100 py-1.5" : "border-transparent py-4"}`}>
+            <motion.nav
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8 }}
+                className={`fixed top-0 inset-x-0 z-50 bg-white transition-all duration-300 border-b ${scrolled ? "border-zinc-100 py-1.5" : "border-transparent py-4"}`}>
                 <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
                     <Link href="/" className="relative z-50">
                         <Image
@@ -54,13 +59,9 @@ const Navbar = () => {
                         className="hidden md:flex items-center gap-8"
                     >
                         {navLinks.map((item) => (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors"
-                            >
+                            <Button key={item.name} href={item.href} variant="empty">
                                 {item.name}
-                            </Link>
+                            </Button>
                         ))}
 
                         {/* Auth Buttons Container */}
@@ -125,7 +126,7 @@ const Navbar = () => {
                         </button>
                     )}
                 </div>
-            </nav>
+            </motion.nav>
 
             {/* Mobile Menu - Bottom Slide-up Overlay */}
             <AnimatePresence>
@@ -174,7 +175,7 @@ const Navbar = () => {
                                 <div className="flex justify-center py-4">
                                     <Loading dark />
                                 </div>
-                            ) : status==="authenticated" ? (
+                            ) : status === "authenticated" ? (
                                 <Button href="/dashboard" fullWidth size="lg">Dashboard</Button>
                             ) : (
                                 <>

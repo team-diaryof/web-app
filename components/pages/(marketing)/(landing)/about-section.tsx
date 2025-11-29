@@ -5,7 +5,7 @@ import { fadeInUp, staggerContainer } from "@/lib/animations";
 
 const AboutSection = () => {
   return (
-    <section className="pt-16 py-24 px-6">
+    <section className="md:min-h-[calc(100vh-65px)] flex items-center px-6">
       <div className="max-w-4xl mx-auto">
         
         <motion.div 

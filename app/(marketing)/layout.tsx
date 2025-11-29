@@ -4,9 +4,9 @@ import { ReactNode } from "react";
 
 export default function MarketingLayout({ children }: { children: ReactNode }) {
     return (
-        <div className="flex min-h-screen flex-col bg-white">
+        <div className="flex-1 relative bg-white">
             <Navbar />
-            <main className="pt-16">
+            <main className="flex-1 pt-16">
                 {children}
             </main>
             <Footer />

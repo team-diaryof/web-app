@@ -9,6 +9,8 @@ const MoveToTop = () => {
 
     // Show button when page is scrolled down
     const handleScroll = () => {
+        if(typeof window === "undefined") return;
+        
         if (window.scrollY > 300) {
             setIsScrolled(true);
         } else {
@@ -17,6 +19,7 @@ const MoveToTop = () => {
     };
 
     const scrollToTop = () => {
+        if (typeof window === "undefined") return;
         window.scrollTo({
             top: 0,
             behavior: 'smooth',
@@ -24,6 +27,7 @@ const MoveToTop = () => {
     };
 
     const scrollToContent = () => {
+        if (typeof window === "undefined") return;
         // Scroll down a bit, e.g., to the next section or just a standard amount
         window.scrollTo({
             top: window.innerHeight, // Scroll one viewport height down
@@ -32,6 +36,7 @@ const MoveToTop = () => {
     }
 
     useEffect(() => {
+        if (typeof window === "undefined") return;
         window.addEventListener('scroll', handleScroll);
         return () => {
             window.removeEventListener('scroll', handleScroll);

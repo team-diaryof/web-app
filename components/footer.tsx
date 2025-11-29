@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 const Footer = () => {
   return (
-    <footer className="py-20 pb-16 px-6 bg-white">
+    <footer className="py-20 pb-16 px-6 bg-zinc-50/30">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-12">
 
         <div className="space-y-4">

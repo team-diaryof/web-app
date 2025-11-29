@@ -5,10 +5,10 @@ const TIMING = {
   normal: 0.8,
   slow: 1.2,
   delay: 0.2,
-  stagger: 0.1,
+  stagger: 0.25,
 } as const;
 
-const EASE = [0.42, 0, 0.58, 1] as Easing ;// Editorial smooth ease
+export const EASE = [0.42, 0, 0.58, 1] as Easing ;// Editorial smooth ease
 
 // --- Container Variants ---
 
@@ -63,10 +63,9 @@ export const fadeIn: Variants = {
 };
 
 export const imageReveal: Variants = {
-  hidden: { opacity: 0, y: 10 },
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    y: 0,
     transition: {
       duration: 1,
       ease: EASE,

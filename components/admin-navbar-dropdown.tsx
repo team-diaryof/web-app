@@ -31,7 +31,7 @@ const AdminNavbarDropDown = () => {
     };
 
     return (
-        <Dropdown align='right' trigger={<MenuIcon className="w-6 h-6 cursor-pointer" aria-label="Open menu" />}>
+        <Dropdown position='bottom-left' trigger={<MenuIcon className="w-6 h-6 cursor-pointer" aria-label="Open menu" />}>
             <div>
                 <DropdownItem href='/dashboard' className='font-medium'>Dashboard</DropdownItem>
                 <DropdownItem href='/profile' className='font-medium'>Profile</DropdownItem>

@@ -93,10 +93,9 @@ const AppFeaturesSection = () => {
 
 
   return (
-    <div id='download' className="w-full max-w-6xl mx-auto px-6 py-32 ">
+    <div id='download' className="w-full h-screen-navbar flex items-center max-w-6xl mx-auto px-6 ">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
 
-        {/* --- LEFT COLUMN: Features List --- */}
         <motion.div
           className="lg:col-span-7 max-md:hidden"
           variants={staggerContainer}
@@ -108,7 +107,7 @@ const AppFeaturesSection = () => {
             What to Expect
           </motion.h2>
 
-          <div className="space-y-10">
+          <div className="space-y-6">
             {features.map((feature, idx) => (
               <motion.div key={idx} variants={fadeInUp} className="flex gap-5">
                 {/* Number Badge */}
@@ -131,7 +130,6 @@ const AppFeaturesSection = () => {
         </motion.div>
 
 
-        {/* --- RIGHT COLUMN: Download Card --- */}
         <motion.div
           className="lg:col-span-5 h-full"
           variants={staggerContainer}
@@ -141,9 +139,8 @@ const AppFeaturesSection = () => {
         >
           <motion.div
             variants={fadeInUp}
-            className="bg-zinc-50 rounded-3xl p-8 border border-zinc-100 relative overflow-hidden group h-full"
+            className="bg-zinc-50 rounded-3xl p-8 border border-zinc-200 relative overflow-hidden group h-full"
           >
-            {/* Decorative Blur Effect */}
             <div className="absolute -right-10 -top-10 w-40 h-40 bg-gray-200 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-700" />
 
             <div className="relative z-10">
@@ -157,7 +154,6 @@ const AppFeaturesSection = () => {
 
               <div className="space-y-4">
                 
-                {/* --- ANIMATED ANDROID BUTTON --- */}
                 <motion.button
                   onClick={handleDownload}
                   // Animate background color based on state

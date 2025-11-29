@@ -30,7 +30,7 @@ const AppNavbarDropDown = () => {
 
     return (
         <Dropdown
-            align='right'
+            position='bottom-left'
             trigger={
                 <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
                     <div className="size-8 rounded-full bg-zinc-900 text-white flex items-center justify-center text-xs font-medium">

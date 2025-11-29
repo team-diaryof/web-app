@@ -37,7 +37,7 @@ export default function LocationMap({
       <MapContainer
         center={position}
         zoom={zoom}
-        className="h-[400px] w-full rounded-lg"
+        className="h-[400px] z-0 w-full rounded-lg"
         scrollWheelZoom={false}
       >
         <TileLayer

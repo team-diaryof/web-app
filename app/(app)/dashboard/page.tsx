@@ -34,7 +34,7 @@ export default function Dashboard() {
             <motion.div
               layoutId="new-entry-card"
               onClick={() => setIsModalOpen(true)}
-              className="mb-8 group cursor-pointer sticky top-[65px] bg-white border-b md:py-2 border-zinc-200"
+              className="mb-8 group cursor-text sticky top-[65px] bg-white border-b md:pt-3 border-zinc-200"
               initial={{ opacity: 1 }}
             >
               <div className="bg-white rounded-2xl p-4 transition-all duration-200 flex items-center gap-4">

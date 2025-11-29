@@ -95,7 +95,7 @@ const PriceSection = () => {
     const { isAuthenticated } = useAuthStore();
 
     return (
-        <section id="pricing" className="py-24 pb-32 relative overflow-hidden">
+        <section id="pricing" className="h-screen-navbar flex items-center relative overflow-hidden">
             {/* Subtle background decoration */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[400px] bg-amber-100/40 blur-[120px] rounded-full pointer-events-none -z-10" />
 

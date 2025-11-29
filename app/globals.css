@@ -21,6 +21,9 @@ html {
   .btn-primary{
     @apply bg-black w-fit text-white font-playfair rounded-full p-3 px-6
   }
+  .h-screen-navbar{
+    @apply min-h-[calc(100vh-65px)];
+  }
 }
 
 @media (prefers-color-scheme: dark) {

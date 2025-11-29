@@ -1,15 +1,18 @@
-// app/(marketing)/page.tsx
 import { PageTransition } from '@/components/animations'
-import MoveToTop from '@/components/move-to-top'
 import AboutSection from '@/components/pages/(marketing)/(landing)/about-section'
 import DownloadSection from '@/components/pages/(marketing)/(landing)/download-section'
 import HeroSection from '@/components/pages/(marketing)/(landing)/hero-section'
 import MapSection from '@/components/pages/(marketing)/(landing)/map-section'
 import PriceSection from '@/components/pages/(marketing)/(landing)/pricing-section'
+import { Metadata } from 'next'
+export const metadata: Metadata = {
+  title: "Welcome to DiaryOf",
+  description: "A platform for sharing and discovering personal stories",
+};
 const LandingPage = () => {
     return (
         <PageTransition>
-            <MoveToTop />
+            {/* <MoveToTop /> */}
             <HeroSection />
             <AboutSection />
             <DownloadSection />

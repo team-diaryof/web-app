@@ -40,7 +40,7 @@ const AppNavbar = () => {
                     {/* Logo Area */}
                     <div className={`flex items-center shrink-0 transition-opacity duration-200 ${showSearch ? 'opacity-0 md:opacity-100 pointer-events-none md:pointer-events-auto' : 'opacity-100'}`}>
                         <Link href="/"> 
-                            <Image src={Logo} className='h-8 w-auto' alt="The Diary Of" />
+                            <Image src={Logo} className='w-36' alt="The Diary Of" />
                         </Link>
                     </div>
 
@@ -100,7 +100,7 @@ const AppNavbar = () => {
                         
                         {/* Notifications Dropdown */}
                         <Dropdown
-                            align="right"
+                            position="bottom-left"
                             className="flex items-center"
                             menuClassName="max-md:w-full w-auto p-0" // Let content define width, no padding on container
                             trigger={

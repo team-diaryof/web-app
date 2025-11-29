@@ -1,29 +1,30 @@
+import { cn } from '@/lib/cn';
 import Link from 'next/link';
 import React from 'react';
-import { cn } from '@/lib/cn';
 import Loading from './loading';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children?: React.ReactNode;
     onClick?: () => void;
     className?: string;
-    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'link';
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'link' | 'empty';
     href?: string;
     disabled?: boolean;
     loading?: boolean;
     fullWidth?: boolean;
-    size?: "xs" | 'sm' | 'md' | 'lg' | 'icon';
+    size?: "xs" | 'sm' | 'md' | 'lg' ;
 }
 
-const baseStyles = "inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none";
+const baseStyles = "inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-white transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none";
 
 const variantStyles = {
     primary: 'hover:bg-zinc-900 text-zinc-50 bg-zinc-900/90 shadow-sm',
     secondary: 'bg-zinc-100 text-zinc-900 hover:bg-zinc-200/80',
     outline: 'border border-zinc-200 bg-white hover:bg-zinc-100 hover:text-zinc-900 text-zinc-900',
-    ghost: 'hover:bg-zinc-100 hover:text-zinc-900 text-zinc-600',
+    ghost: 'hover:bg-zinc-100 hover:text-zinc-900 text-zinc-600 hover:border-zinc-200 border border-transparent',
     destructive: 'bg-red-500 text-zinc-50 hover:bg-red-500/90 shadow-sm',
     link: 'text-zinc-900 underline-offset-4 hover:underline p-0 h-auto rounded-none',
+    empty: 'text-zinc-500 hover:text-zinc-900 underline-offset-4 p-0 h-auto rounded-none',
 };
 
 const sizeStyles = {
@@ -31,7 +32,6 @@ const sizeStyles = {
     sm: 'h-9 px-4 text-xs',
     md: 'h-11 px-6',
     lg: 'h-14 px-8 text-base',
-    icon: 'h-10 w-10', 
 };
 
 const Button = ({
