@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans font-medium tracking-wider `}
+        className={`${geistSans.variable} ${geistMono.variable} selection:bg-amber-100 antialiased font-sans font-medium tracking-wider `}
       >
         <UserAuthStatusCheck />
         {children}

@@ -40,7 +40,7 @@ export function DropdownItem({
       onClick={handleClick}
       disabled={disabled}
       className={cn(
-        "w-full px-4 py-3 text-left text-2xl md:text-sm cursor-pointer transition-colors",
+        "w-full px-3 py-4 md:py-2.5 hover:bg-zinc-50 text-left text-2xl md:text-sm cursor-pointer transition-colors",
         disabled && "opacity-50 cursor-not-allowed",
         className
       )}

@@ -40,7 +40,7 @@ export default function Login() {
 
 		setTimeout(() => {
 			setStatus("idle");
-			router.push("/dashboard");
+			user.role === "admin" ? router.push("/admin/dashboard") : router.push("/dashboard");
 		}, 1000);
 	};
 
@@ -71,6 +71,9 @@ export default function Login() {
 					required
 					disabled={status === "loading"}
 				/>
+				<Button variant="link" href={`/forgot-password`} className="text-xs ml-auto mr-2 mt-1">
+					Forgot Password ?
+				</Button>
 
 				<Button
 					variant="primary"

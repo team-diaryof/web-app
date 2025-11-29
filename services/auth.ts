@@ -105,4 +105,37 @@ export const authServices = {
       };
     }
   },
+  forgotPassword: async (email: string) => {
+    try {
+      // Replace with your actual fetch wrapper
+      const response = await api.post(`/auth/forgot-password`, { email });
+      return response.data;
+    } catch (error) {
+      return { success: false, message: "Network error" };
+    }
+  },
+
+  verifyResetOtp: async (email: string, otp: string) => {
+    try {
+      const response = await api.post(`/auth/verify-password-reset-otp`, {
+        email,
+        otp,
+      });
+      return response.data;
+    } catch (error) {
+      return { success: false, message: "Invalid OTP" };
+    }
+  },
+
+  resetPassword: async (email: string, newPassword: string) => {
+    try {
+      const response = await api.post(`/auth/reset-password`, {
+        email,
+        newPassword,
+      });
+      return response.data;
+    } catch (error) {
+      return { success: false, message: "Failed to reset password" };
+    }
+  },
 };

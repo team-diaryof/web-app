@@ -6,7 +6,7 @@ const AppLeftSidebar = () => {
         <div className="space-y-6">
             <Clock />
 
-            <div className="bg-zinc-50 rounded-2xl p-4 border border-zinc-100">
+            <div className="p-4">
                 <DatePicker />
             </div>
         </div>

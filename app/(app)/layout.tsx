@@ -6,7 +6,7 @@ import { ReactNode } from "react"
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <AuthProvider allowedRoles={["USER", "GUEST"]}>
-      <div className="min-h-screen bg-zinc-50/50 font-sans text-zinc-900">
+      <div className="min-h-screen">
         <AppNavbar />
         {children}
         <MobileAppOpenBanner />

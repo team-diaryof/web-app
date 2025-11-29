@@ -1,17 +1,37 @@
-// app/api/v1/newsletter/subscribe/route.ts
+import connectDB from "@/lib/mongodb";
+import Subscriber from "@/models/Subscriber";
 import { NextResponse } from "next/server";
 
 export const POST = async (request: Request) => {
-  const { email } = await request.json();
+  try {
+    const { email } = await request.json();
 
-  if (email === "saquibali353@gmail.com")
+    if (!email || !email.includes("@")) {
+      return NextResponse.json(
+        { message: "Invalid email address" },
+        { status: 400 }
+      );
+    }
+
+    await connectDB();
+    const isAlreadySubscribed = await Subscriber.findOne({ email });
+    if (isAlreadySubscribed) {
+      return NextResponse.json(
+        { message: "Subscription successful" },
+        { status: 200 }
+      );
+    }
+
+    await Subscriber.create({ email });
+
     return NextResponse.json(
       { message: "Subscription successful" },
-      { status: 200 }
+      { status: 201 }
     );
-
-  return NextResponse.json(
-    { message: "Subscription successful" },
-    { status: 500 }
-  );
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 };

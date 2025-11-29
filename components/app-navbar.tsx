@@ -1,6 +1,6 @@
 "use client";
 
-import Logo from "@/public/logo-landscape-white.png";
+import Logo from "@/public/logo-landscape-white.png"; // Ensure this path is correct
 import Image from 'next/image';
 import Link from 'next/link';
 import { Bell, Search, X } from "lucide-react"; 
@@ -10,9 +10,10 @@ import dayjs from "dayjs";
 import { AnimatePresence, motion } from "framer-motion";
 import DatePicker from "@/components/date-picker";
 import Clock from "@/components/clock";
+import { Dropdown } from "@/components/ui/dropdown"; 
+import Notifications from "@/components/notifications"; // Ensure import matches file location
 
 const AppNavbar = () => {
-    // Removed mounted state, not needed
     const [currentTime, setCurrentTime] = useState("");
     const [showSearch, setShowSearch] = useState(false);
     const [showDateModal, setShowDateModal] = useState(false);
@@ -33,24 +34,24 @@ const AppNavbar = () => {
 
     return (
         <>
-            <div className='sticky top-0 left-0 z-40 bg-white border-b border-zinc-200'>
+            <div className='sticky top-0 left-0 z-40 bg-white border-b border-zinc-100'>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4 relative">
                     
-                    {/* Left: Logo (Hidden when mobile search is active) */}
+                    {/* Logo Area */}
                     <div className={`flex items-center shrink-0 transition-opacity duration-200 ${showSearch ? 'opacity-0 md:opacity-100 pointer-events-none md:pointer-events-auto' : 'opacity-100'}`}>
-                        <Link href="/dashboard"> 
-                            <Image src={Logo} className='h-8 w-auto' alt="DiaryOf" />
+                        <Link href="/"> 
+                            <Image src={Logo} className='h-8 w-auto' alt="The Diary Of" />
                         </Link>
                     </div>
 
                     {/* Center: Desktop Search */}
-                    <div className="hidden md:flex flex-1 max-w-md mx-4">
+                    <div className="hidden md:flex flex-1 max-w-lg mx-4">
                         <div className="relative w-full group">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-zinc-600 transition-colors" size={18} />
                             <input 
                                 type="text" 
                                 placeholder="Search your memories..." 
-                                className="w-full h-10 pl-10 pr-4 rounded-full bg-zinc-50 border border-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-100 focus:bg-white transition-all placeholder:text-zinc-400"
+                                className="w-full h-10 pl-10 pr-4 rounded-full border border-zinc-100 focus:border-zinc-300 text-sm focus:outline-none transition-all placeholder:text-zinc-400 bg-zinc-50/30 focus:bg-white"
                             />
                         </div>
                     </div>
@@ -78,7 +79,7 @@ const AppNavbar = () => {
                         )}
                     </AnimatePresence>
 
-                    {/* Center Mobile: Date Display Trigger */}
+                    {/* Center Mobile: Date Trigger */}
                     {!showSearch && (
                         <button 
                             onClick={() => setShowDateModal(true)}
@@ -89,7 +90,7 @@ const AppNavbar = () => {
                     )}
                     
                     {/* Right: Actions */}
-                    <div className="flex items-center gap-2 md:gap-5 shrink-0 ml-auto">
+                    <div className="flex items-center gap-1 md:gap-4 shrink-0">
                         <button 
                             className="md:hidden p-2 text-zinc-500 hover:bg-zinc-50 rounded-full"
                             onClick={() => setShowSearch(true)}
@@ -97,12 +98,22 @@ const AppNavbar = () => {
                             <Search size={20} />
                         </button>
                         
-                        <button className="p-2 text-zinc-500 hover:text-zinc-900 transition-colors relative hover:bg-zinc-50 rounded-full">
-                            <Bell size={20} strokeWidth={1.5} />
-                            <span className="absolute top-2 right-2.5 size-2 bg-red-500 rounded-full border-2 border-white"></span>
-                        </button>
+                        {/* Notifications Dropdown */}
+                        <Dropdown
+                            align="right"
+                            className="flex items-center"
+                            menuClassName="max-md:w-full w-auto p-0" // Let content define width, no padding on container
+                            trigger={
+                                <button className="p-2 text-zinc-500 hover:text-zinc-900 transition-colors relative rounded-full hover:bg-zinc-50">
+                                    <Bell size={20} strokeWidth={1.5} />
+                                    <span className="absolute top-2 right-2.5 size-2 bg-red-500 rounded-full border-2 border-white"></span>
+                                </button>
+                            }
+                        >
+                            <Notifications />
+                        </Dropdown>
 
-                        <div className="pl-2 md:pl-5 border-l border-zinc-200">
+                        <div className="pl-2 md:pl-4 border-l border-zinc-200 ml-1">
                              <AppNavbarDropDown />
                         </div>
                     </div>
@@ -155,4 +166,4 @@ const AppNavbar = () => {
     )
 }
 
-export default AppNavbar
+export default AppNavbar;

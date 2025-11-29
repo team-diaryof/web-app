@@ -11,7 +11,7 @@ interface LoadingProps {
 }
 
 const sizeStyles = {
-  xs: "size-3 border-2",
+  xs: "size-4 border-[3px] md:size-3 md:border-2",
   sm: "size-4 border-[3px]",
   md: "size-6 border-[4px]",
   lg: "size-8 border-[6px]",
@@ -35,7 +35,7 @@ const Loading = ({
         className={cn(
           className,
           "rounded-full border-solid border-inherit",
-          dark ? "border-t-zinc-500" : "border-t-zinc-300",
+          dark ? "border-t-zinc-500" : "border-t-zinc-400 ",
           sizeStyles[size],
         )}
       />

@@ -7,6 +7,9 @@ interface AuthState {
   token: string | null;
   user: User | null;
   isAuthenticated: boolean;
+  updateStatus: (
+    status: "unauthenticated" | "loading" | "authenticated"
+  ) => void;
   status: "unauthenticated" | "loading" | "authenticated";
   _hasHydrated: boolean;
   setAuth: (token: string, user: User) => void;
@@ -72,48 +75,51 @@ export const useAuthStore = create<AuthState>()(
 
       setAuth: (token: string, user: User) => {
         tokenUtils.setCookie(COOKIE_NAME, token, COOKIE_MAX_AGE);
-        set({ token, user, isAuthenticated: true, status: "authenticated" });
+        get().updateStatus("authenticated");
+        set({ token, user, isAuthenticated: true });
       },
 
       clearAuth: () => {
         tokenUtils.deleteCookie(COOKIE_NAME);
+        get().updateStatus("unauthenticated");
         set({
           token: null,
           user: null,
           isAuthenticated: false,
-          status: "unauthenticated",
         });
       },
 
+      updateStatus: (
+        status: "unauthenticated" | "loading" | "authenticated"
+      ) => {
+        set({ status });
+      },
+
       loadFromCookie: () => {
-        console.log("Loading auth from cookie...");
-        set({ status: "loading" });
+        get().updateStatus("loading");
         const token = tokenUtils.getCookie(COOKIE_NAME);
         setTimeout(() => {
           if (!token) {
-            console.log("No auth token found in cookies.");
             get().clearAuth();
             return;
           }
-          
+
           if (tokenUtils.isExpired(token)) {
             tokenUtils.deleteCookie(COOKIE_NAME);
-            console.log("Auth token expired.");
             get().clearAuth();
             return;
           }
 
           const user = tokenUtils.decodeUser(token);
           if (user) {
-            console.log("Auth token valid. User loaded from token:", user);
+            get().updateStatus("authenticated");
             set({
               token,
               user,
               isAuthenticated: true,
-              status: "authenticated",
             });
           }
-        }, 5000);
+        }, 2000);
       },
 
       setHasHydrated: (state: boolean) => {

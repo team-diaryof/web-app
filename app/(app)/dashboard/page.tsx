@@ -1,26 +1,56 @@
 "use client";
+
+import { useState } from "react";
 import AppLeftSidebar from "@/components/app-left-sidebar";
 import AppRightSidebar from "@/components/app-right-sidebar";
 import TodayNotes from "@/components/today-notes";
+import NewEntryModal from "@/components/new-entry-modal";
+import { PenLine } from "lucide-react";
+import { motion } from "framer-motion";
+import AnimatePageWrapper from "@/components/animations/animate-page-wrapper";
+
 export default function Dashboard() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <AnimatePageWrapper className="">
+      <NewEntryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+
+      <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-8">
-          
-          {/* Left Sidebar */}
-          <aside className="hidden lg:block w-64 shrink-0">
-            <div className="sticky top-24">
-              <AppLeftSidebar />
-            </div>
+
+          <aside className="hidden lg:block w-64 h-[calc(100vh-65px)] sticky top-[65px] shrink-0">
+            <AppLeftSidebar />
           </aside>
 
-          {/* Main Feed */}
           <main className="flex-1 min-w-0">
-            <div className="mb-8">
-              <h1 className="text-3xl font-semibold text-zinc-900 tracking-tight">Today&apos;s Entries</h1>
-              <p className="text-zinc-500 mt-1">Capture your moments as they happen.</p>
-            </div>
+
+            {/* We hide this visually when modal is open to prevent duplication during animation, 
+                though Framer usually handles layoutId nicely. 
+            */}
+            <motion.div
+              layoutId="new-entry-card"
+              onClick={() => setIsModalOpen(true)}
+              className="mb-8 group cursor-pointer sticky top-[65px] bg-white border-b md:py-2 border-zinc-200"
+              initial={{ opacity: 1 }}
+            >
+              <div className="bg-white rounded-2xl p-4 transition-all duration-200 flex items-center gap-4">
+                <motion.div layoutId="new-entry-icon"
+                  className="h-10 w-10 rounded-full bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-400 group-hover:text-zinc-600 transition-colors"
+                >
+                  <PenLine size={18} />
+                </motion.div>
+                <div className="flex-1">
+                  <motion.span layoutId="new-entry-placeholder" className="text-zinc-400 text-lg group-hover:text-zinc-500 transition-colors">
+                    Write something for today...
+                  </motion.span>
+                </div>
+              </div>
+            </motion.div>
+
             <TodayNotes />
           </main>
 
@@ -33,6 +63,6 @@ export default function Dashboard() {
 
         </div>
       </div>
-    </div>
+    </AnimatePageWrapper>
   );
 }

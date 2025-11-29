@@ -24,8 +24,13 @@ const Footer = () => {
           </div>
           <div className="flex flex-col gap-3">
             <span className="font-semibold text-zinc-900">Legal</span>
-            <Link href="#" className="text-zinc-500 hover:text-zinc-900">Privacy</Link>
-            <Link href="/terms-and-condition" className="text-zinc-500 hover:text-zinc-900">Terms</Link>
+            <Link href="/privacy" className="text-zinc-500 hover:text-zinc-900">Privacy</Link>
+            <Link href="/terms-and-conditions" className="text-zinc-500 hover:text-zinc-900">Terms</Link>
+          </div>
+          <div className="flex flex-col gap-3">
+            <span className="font-semibold text-zinc-900">Support</span>
+            <Link href="/help" className="text-zinc-500 hover:text-zinc-900">Help</Link>
+            <Link href="#" className="text-zinc-500 hover:text-zinc-900">teamdiaryof@gmail.com</Link>
           </div>
         </div>
 
