@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------
+// 1. NEXTAUTH REQUIRED MODELS (Account & Session)
+// ---------------------------------------------------------
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ---------------------------------------------------------
+// 2. YOUR CUSTOM MODELS (User & App Data)
+// ---------------------------------------------------------
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String?
+  
+  // NextAuth Standard Fields
+  emailVerified DateTime?
+  image         String?   // Google Picture syncs here
+
+  // Custom Fields
+  profilePictureUrl String?   
+  googleId          String?   @unique
+  role              Role      @default(USER)
+  isPremium         Boolean   @default(false)
+  premiumUntil      DateTime?
+  stripeCustomerId  String?   @unique
+  stripeSubscriptionId String? @unique
+  createdAt         DateTime  @default(now())
+  expiresAt         DateTime?
+
+  // Relations
+  accounts          Account[]          // For Google Login
+  sessions          Session[]          // For Google Login
+  VerificationToken VerificationToken? // Your Custom OTP
+  days              Day[]
+  diaryGenerations  DiaryGeneration[]
+}
+
+// YOUR CUSTOM TOKEN (Linked to User)
+model VerificationToken {
+  id         String   @id @default(cuid())
+  identifier String
+  token      String   @unique
+  expiresAt  DateTime
+  userId     String   @unique
+  createdAt  DateTime @default(now())
+  User       User     @relation(fields: [userId], references: [id])
+}
+
+model Day {
+  id        String   @id @default(cuid())
+  date      DateTime @db.Date
+  userId    String
+  summary   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id])
+  tasks     Task[]
+
+  @@unique([userId, date])
+  @@index([userId, date])
+}
+
+model Task {
+  id            String   @id @default(cuid())
+  description   String
+  timestamp     DateTime
+  audioUrl      String?
+  transcription String?
+  sentiment     String?
+  category      String?
+  dayId         String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  Day           Day      @relation(fields: [dayId], references: [id])
+
+  @@index([dayId])
+  @@index([timestamp])
+  @@index([dayId, timestamp])
+}
+
+model DiaryGeneration {
+  id          String   @id @default(cuid())
+  userId      String
+  fromDate    DateTime @db.Date
+  toDate      DateTime @db.Date
+  prompt      String?
+  result      String
+  wordCount   Int
+  modelUsed   String
+  generatedAt DateTime @default(now())
+  durationMs  Int
+  User        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([generatedAt])
+}
+
+enum Role {
+  USER
+  ADMIN
+  GUEST
+  TEMP
+}
