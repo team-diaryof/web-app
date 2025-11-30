@@ -21,6 +21,9 @@ html {
   .btn-primary{
     @apply bg-black w-fit text-white font-playfair rounded-full p-3 px-6
   }
+  .animate-theme{
+    @apply transition-colors duration-500
+  }
   .h-screen-navbar{
     @apply min-h-[calc(100vh-65px)];
   }
@@ -32,3 +35,5 @@ html {
     --foreground: #ededed;
   }
 }
+
+@variant dark (&:where(.dark, .dark *));

@@ -69,15 +69,15 @@ export default function AuthProvider({
 
   if (!ready) return <LoadingScreen />;
 
-  if(!isAuthenticated && !blockAuthenticated) {
+  // Show error if authenticated user tries to access auth page
+  if (blockAuthenticated && isAuthenticated) {
+    redirect(user?.role == "ADMIN" ? "/admin/dashboard" : "/dashboard");
+  }
+  if (!isAuthenticated && !blockAuthenticated) {
     redirect("/login");
   }
 
-  // Show error if authenticated user tries to access auth page
-  if (blockAuthenticated && isAuthenticated) {
-    redirect(user?.role=="ADMIN" ? "/admin/dashboard" : "/dashboard");
-  }
-  
+
   // Wrong role after checks → show error page
   if (allowedRoles?.length && (!user || !allowedRoles.includes(user.role))) {
     return <UnifiedErrorPage badRequest title="Login to acccess" message="You should login/register to get the access of dashboard page." actionLabel="Login" actionLink="/login" />;

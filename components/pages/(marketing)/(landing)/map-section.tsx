@@ -9,7 +9,7 @@ const Map = dynamic(() => import("@/components/ui/map"), { ssr: false });
 
 export default function MapSection() {
   return (
-    <section className="py-24 px-6 bg-white">
+    <section className="py-24 px-6">
       <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-12 lg:gap-24">
         
         {/* Text Content */}

@@ -140,11 +140,11 @@ const ContactSection = () => {
   ];
 
   return (
-    <AnimatePageWrapper className="py-24 bg-white overflow-hidden">
+    <AnimatePageWrapper className="py-24 overflow-hidden">
       <div className="max-w-6xl mx-auto px-6">
         {/* Header */}
         <div className="mb-20 text-center md:text-left">
-          <h2 className="text-4xl md:text-5xl font-bold text-zinc-900 mb-6 font-serif">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 font-serif">
             Get in touch
           </h2>
           <p className="text-zinc-500 text-lg max-w-xl">

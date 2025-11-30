@@ -8,14 +8,13 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  
+
   return (
     <AuthProvider blockAuthenticated>
-      <div className="max-w-lg mx-auto min-h-screen flex flex-col items-center justify-start bg-white">
-        <BackHeader />
+      <div className="max-w-lg mx-auto min-h-screen flex flex-col items-center justify-start">
         <Navbar />
         <div
-          className="w-full p-6 py-16"
+          className="w-full p-6 mt-[65px] py-16"
         >
           {children}
         </div>

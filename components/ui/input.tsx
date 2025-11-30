@@ -27,14 +27,14 @@ const Input: React.FC<InputProps> = ({
     return (
         <div className="flex flex-col gap-1.5 w-full">
             {label && (
-                <label className="text-sm font-medium text-zinc-700 ml-1">
+                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 ml-1">
                     {label}
                 </label>
             )}
 
             <div className="relative group">
                 {icon && (
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-zinc-800 transition-colors">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 group-focus-within:text-zinc-800 animate-theme">
                         {icon}
                     </div>
                 )}
@@ -42,9 +42,9 @@ const Input: React.FC<InputProps> = ({
                 <input
                     type={inputType}
                     className={cn(
-                        "w-full rounded-full border border-zinc-100 bg-white px-5 py-3 text-sm outline-none transition-all",
+                        "w-full rounded-full border border-zinc-100 bg-white focus:bg-zinc-50 dark:focus:bg-zinc-950 dark:bg-black dark:border-zinc-800 px-5 py-3 text-sm outline-none animate-theme",
                         "placeholder:text-zinc-400",
-                        "focus:border-zinc-300",
+                        "focus:border-zinc-300 dark:focus:border-zinc-600",
                         "disabled:cursor-not-allowed disabled:opacity-50",
                         error && "border-red-300 focus:border-red-400",
                         icon && "pl-11",
@@ -57,7 +57,7 @@ const Input: React.FC<InputProps> = ({
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-zinc-400 hover:text-zinc-600 transition-colors"
                         tabIndex={-1}
                     >
                         {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}

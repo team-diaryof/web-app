@@ -34,7 +34,7 @@ const AppNavbar = () => {
 
     return (
         <>
-            <div className='sticky top-0 left-0 z-40 bg-white border-b border-zinc-100'>
+            <div className='sticky top-0 left-0 z-40 bg-white dark:bg-black animate-theme border-b border-zinc-100 dark:border-zinc-900'>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4 relative">
                     
                     {/* Logo Area */}

@@ -15,11 +15,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     size?: "xs" | 'sm' | 'md' | 'lg' ;
 }
 
-const baseStyles = "inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-white transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none";
+const baseStyles = "inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-white animate-theme duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none";
 
 const variantStyles = {
-    primary: 'hover:bg-zinc-900 text-zinc-50 bg-zinc-900/90 shadow-sm',
-    secondary: 'bg-zinc-100 text-zinc-900 hover:bg-zinc-200/80',
+    primary: 'hover:bg-black bg-black/90 text-zinc-50 dark:hover:bg-white dark:bg-white/90 dark:text-zinc-950',
+    secondary: 'bg-zinc-100 hover:bg-zinc-200/80 text-black dark:bg-zinc-900/90 dark:hover:bg-zinc-900 dark:text-white',
     outline: 'border border-zinc-200 bg-white hover:bg-zinc-100 hover:text-zinc-900 text-zinc-900',
     ghost: 'hover:bg-zinc-100 hover:text-zinc-900 text-zinc-600 hover:border-zinc-200 border border-transparent',
     destructive: 'bg-red-500 text-zinc-50 hover:bg-red-500/90 shadow-sm',

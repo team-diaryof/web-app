@@ -53,7 +53,7 @@ const features = [
 
 const AppFeaturesSection = () => {
   const apkUrl = "https://github.com/Saquib1973/hydrate-app/releases/download/v1.0.0/hydrated-1.0.0.apk";
-  
+
   // State for button animation: 'idle' | 'processing' | 'downloading'
   const [downloadStatus, setDownloadStatus] = useState<'idle' | 'processing' | 'downloading'>('idle');
 
@@ -93,8 +93,9 @@ const AppFeaturesSection = () => {
 
 
   return (
-    <div id='download' className="w-full h-screen-navbar flex items-center max-w-6xl mx-auto px-6 ">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+    <section id="download" className="h-screen-navbar flex items-center relative overflow-hidden">
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 max-w-6xl mx-auto px-6 gap-12 lg:gap-20">
 
         <motion.div
           className="lg:col-span-7 max-md:hidden"
@@ -153,7 +154,7 @@ const AppFeaturesSection = () => {
               </p>
 
               <div className="space-y-4">
-                
+
                 <motion.button
                   onClick={handleDownload}
                   // Animate background color based on state
@@ -165,10 +166,10 @@ const AppFeaturesSection = () => {
                   className="relative flex items-center w-full justify-between p-4 rounded-xl shadow-sm hover:shadow-md overflow-hidden min-h-[80px]"
                 >
                   <AnimatePresence mode="wait">
-                    
+
                     {/* STATE 1: IDLE */}
                     {downloadStatus === 'idle' && (
-                      <motion.div 
+                      <motion.div
                         key="idle"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -191,7 +192,7 @@ const AppFeaturesSection = () => {
 
                     {/* STATE 2: PROCESSING */}
                     {downloadStatus === 'processing' && (
-                      <motion.div 
+                      <motion.div
                         key="processing"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -205,7 +206,7 @@ const AppFeaturesSection = () => {
 
                     {/* STATE 3: SUCCESS/DOWNLOADING */}
                     {downloadStatus === 'downloading' && (
-                      <motion.div 
+                      <motion.div
                         key="downloading"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -250,7 +251,9 @@ const AppFeaturesSection = () => {
         </motion.div>
 
       </div>
-    </div>
+      {/* <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[200px] bg-conic-60 from-primary to bg-primary blur-[120px] rounded-full pointer-events-none -z-10" /> */}
+
+    </section>
   )
 }
 
