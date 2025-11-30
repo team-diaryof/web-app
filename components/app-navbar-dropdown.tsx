@@ -1,31 +1,32 @@
-"use client"
+"use client";
+
 import { Dropdown, DropdownItem } from '@/components/ui/dropdown';
 import Loading from '@/components/ui/loading';
 import { useAuthStore } from '@/store/auth';
-import { toast } from 'sonner';
 import { AnimatePresence, motion } from 'framer-motion';
 import { User, Settings, LogOut, LayoutDashboard, CreditCard, Book } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+// 1. Import signOut from NextAuth
+import { signOut } from "next-auth/react"; 
 
 const AppNavbarDropDown = () => {
-    const [logoutLoading, setLogoutLoading] = useState(false)
-    const { clearAuth, user,updateStatus } = useAuthStore();
-    const router = useRouter();
+    const [logoutLoading, setLogoutLoading] = useState(false);
+    const { clearAuth, user, updateStatus } = useAuthStore();
+    // useRouter is not needed anymore because signOut handles the redirect
 
     const handleLogout = async () => {
         setLogoutLoading(true);
         updateStatus("loading");
-        return new Promise<void>((resolve) => {
-            
-            router.push("/");
-            setTimeout(() => {
-                clearAuth();
-                setLogoutLoading(false);
-                toast.success("Logged out successfully.");
-                resolve();
-            }, 500);
-        });
+
+        // 2. Clear Local State (Zustand + Custom Cookie)
+        clearAuth();
+
+        // 3. Clear NextAuth Session (Database + NextAuth Cookie)
+        // This handles the redirect to "/" automatically
+        await signOut({ callbackUrl: "/", redirect: true });
+        
+        // No need to set loading false or toast here, 
+        // as the page will reload/redirect immediately.
     };
 
     return (
@@ -95,7 +96,7 @@ const AppNavbarDropDown = () => {
                 </AnimatePresence>
             </DropdownItem>
         </Dropdown>
-    )
-}
+    );
+};
 
-export default AppNavbarDropDown
+export default AppNavbarDropDown;

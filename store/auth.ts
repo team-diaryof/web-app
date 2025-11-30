@@ -91,6 +91,11 @@ export const useAuthStore = create<AuthState>()(
 
       clearAuth: () => {
         tokenUtils.deleteCookie(COOKIE_NAME);
+        
+        if (typeof window !== "undefined") {
+            localStorage.removeItem("auth-storage");
+        }
+
         get().updateStatus("unauthenticated");
         set({
           token: null,
