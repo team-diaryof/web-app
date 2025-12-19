@@ -1,7 +1,6 @@
 "use client";
 
 import Button from "@/components/ui/button";
-import Loading from "@/components/ui/loading";
 import Logo from "@/public/logo-landscape-transparent.png";
 import { useAuthStore } from "@/store/auth";
 import { useThemeStore } from "@/store/theme";
@@ -11,168 +10,138 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useThemeTransition } from "./providers/theme-transition-provider";
 
 const navLinks = [
     { name: "Newsletter", href: "/newsletter" },
-    { name: "Download", href: "/#download" },
+    { name: "Download", href: "/download" },
     { name: "Pricing", href: "/#pricing" },
     { name: "Contact", href: "/contact" },
 ];
 
 const Navbar = () => {
     const { status } = useAuthStore();
-    const { theme, toggleTheme } = useThemeStore();
+    const { theme } = useThemeStore(); // Keep theme for icon display
+    const { triggerThemeSwitch, isTransitioning } = useThemeTransition(); // Use the transition hook
+
     const [mobileOpen, setMobileOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
-    const isAuthScreens = pathname === "/login" || pathname === "/register";
+    const isAuthScreens = ["/login", "/register"].includes(pathname);
+
+    // ... (Keep your useEffects for scroll handling exactly as they were) ...
+    // Note: I'm omitting the full repetition of useEffects to save space, 
+    // but keep your existing scroll/hash logic here.
 
     useEffect(() => {
-        if (mobileOpen) document.body.style.overflow = "hidden";
-        else document.body.style.overflow = "unset";
+        const handleNavigationScroll = () => {
+            const hash = window.location.hash;
+            if (hash) {
+                setTimeout(() => {
+                    const id = hash.replace('#', '');
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }, 500);
+            } else {
+                window.scrollTo(0, 0);
+            }
+        };
+        handleNavigationScroll();
+    }, [pathname]);
+
+    useEffect(() => {
+        document.body.style.overflow = mobileOpen ? "hidden" : "unset";
     }, [mobileOpen]);
 
     useEffect(() => {
-        if (typeof window === "undefined") return;
-        const onScroll = () => setScrolled(window.scrollY > 20);
-        window.addEventListener("scroll", onScroll);
-        return () => window.removeEventListener("scroll", onScroll);
-    }, []);
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 10);
+        };
+        window.addEventListener("scroll", handleScroll);
+        handleScroll();
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [pathname]);
 
-    // Helper to determine width based on status
-    const getContainerWidth = () => {
-        if (status === "loading") return 205; // Enough for 2 buttons + gap
-        if (status === "authenticated") return 120; // Dashboard button only
-        return 205; // Login + Register buttons
+    // Handle Mobile Menu Logo Click
+    const handleLogoClick = (e: React.MouseEvent) => {
+        setMobileOpen(false);
+        if (pathname === "/") {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     };
 
     return (
         <>
             <motion.nav
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8 }}
-                className={`fixed top-0 inset-x-0 z-50 bg-white dark:bg-black animate-theme border-b 
-                ${scrolled
-                        ? "border-zinc-200 dark:border-zinc-900 py-2"
-                        : "border-transparent py-4"
+                className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] flex items-center ${scrolled
+                        ? "py-3 bg-white dark:bg-black backdrop-blur-2xl border-b border-zinc-200/50 dark:border-zinc-800/50"
+                        : "py-8 bg-transparent border-b border-transparent"
                     }`}
             >
-                <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
-                    <Link href="/" className="relative z-50">
+                <div className="max-w-[1600px] mx-auto px-6 lg:px-12 w-full flex items-center justify-between">
+
+                    <Link href="/" onClick={handleLogoClick} className="relative z-50 flex items-center">
                         <Image
                             src={Logo}
                             alt="Logo"
-                            className="h-12 dark:brightness-0 dark:invert w-auto object-contain"
+                            className="h-8 md:h-10 dark:brightness-0 dark:invert w-auto object-contain"
                             priority
                         />
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <motion.div className="hidden md:flex items-center gap-8">
+                    <div className="hidden md:flex items-center gap-8">
                         {navLinks.map((item) => (
-                            <Button key={item.name} href={item.href} variant="empty" className="dark:text-zinc-300 dark:hover:text-white">
+                            <Link
+                                key={item.name}
+                                href={item.href}
+                                className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors"
+                            >
                                 {item.name}
-                            </Button>
+                            </Link>
                         ))}
 
-                        {/* Theme Toggle Button (Desktop) */}
-                        <button
-                            onClick={toggleTheme}
-                            className="p-2 rounded-full cursor-pointer text-zinc-500 group hover:text-black dark:hover:text-white animate-theme"
-                        >
-                            {theme === 'dark' ? <Sun size={20} className="group-active:animate-spin" /> : <Moon className="" size={20} />}
-                        </button>
+                        <div className="h-4 w-px bg-zinc-300 dark:bg-zinc-700 mx-2" />
 
-                        {/* Auth Buttons Container */}
-                        {!isAuthScreens && (
-                            <motion.div
-                                initial={{ width: 195, opacity: 0 }}
-                                animate={{
-                                    width: getContainerWidth(),
-                                    opacity: 1
-                                }}
-                                transition={{
-                                    opacity: { duration: 0.2 }
-                                }}
-                                className="pl-4 border-l border-zinc-200 dark:border-zinc-800 animate-theme flex items-center justify-end overflow-hidden"
-                            >
-                                <AnimatePresence mode="wait">
-                                    {status === "loading" ? (
-                                        <motion.div
-                                            key="loading"
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                            transition={{ duration: 0.2 }}
-                                            className="flex gap-3 w-full justify-end"
-                                        >
-                                            <Button className="w-[78px]" variant="secondary" href="/login" size="sm">
-                                                <Loading size={"sm"} />
-                                            </Button>
-                                            <Button className="w-[100px]" href="/register" size="sm">
-                                                <Loading dark size={"sm"} />
-                                            </Button>
-                                        </motion.div>
-                                    ) : status === "authenticated" ? (
-                                        <motion.div
-                                            key="auth"
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                            transition={{ duration: 0.2 }}
-                                            className="w-full flex justify-end"
-                                        >
-                                            <Button href={"/dashboard"} size="sm">Dashboard</Button>
-                                        </motion.div>
-                                    ) : (
-                                        <motion.div
-                                            key="guest"
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                            transition={{ duration: 0.2 }}
-                                            className="flex gap-3 w-full justify-end"
-                                        >
-                                            <Button variant="secondary" href="/login" size="sm">Log In</Button>
-                                            <Button href="/register" size="sm">Get Started</Button>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </motion.div>
-                        )}
-                    </motion.div>
-
-                    {/* Mobile Actions (Theme Toggle + Menu) */}
-                    <div className="flex md:hidden items-center gap-3">
-                        {/* Mobile Auth Button Logic matches desktop but without width animation for simplicity on mobile header */}
-                        <Button className="w-[96px]" size="sm" disabled={status == "loading"} href={status === "authenticated" ? "/dashboard" : "/register"}>
-                            <AnimatePresence mode="wait">
-                                {status === "loading" ? (
-                                    <Loading size="xs" dark={theme === 'light'} />
-                                ) : status === "authenticated" ?
-                                    <motion.span initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}>Dashboard</motion.span>
-                                    :
-                                    <motion.span initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}>Login</motion.span>
-                                }
-                            </AnimatePresence>
-                        </Button>
+                        {/* UPDATED THEME BUTTON */}
                         <button
-                            onClick={toggleTheme}
-                            className="p-2 text-zinc-900 dark:text-white"
+                            onClick={triggerThemeSwitch} // Use the new trigger
+                            disabled={isTransitioning}   // Prevent double clicks
+                            className="text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors relative"
                         >
+                            {/* We keep the icon based on current theme, it will flip when the overlay lifts */}
                             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
                         </button>
 
-                        {!mobileOpen && (
-                            <button
-                                className="p-2 -mr-2 text-zinc-900 dark:text-white"
-                                onClick={() => setMobileOpen(true)}
-                                aria-label="Open menu"
-                            >
-                                <Menu size={24} />
-                            </button>
+                        {!isAuthScreens && (
+                            <div className="flex items-center gap-3 pl-2">
+                                {status === "authenticated" ? (
+                                    <Button href="/dashboard" variant="secondary" size="sm" className="h-9 px-5">Dashboard</Button>
+                                ) : (
+                                    <>
+                                        <Button variant="ghost" href="/login" size="sm" className="h-9">Log In</Button>
+                                        <Button href="/register" size="sm" className="h-9 px-5">Get Started</Button>
+                                    </>
+                                )}
+                            </div>
                         )}
+                    </div>
+
+                    {/* Mobile Actions */}
+                    <div className="flex md:hidden items-center gap-3">
+                        {!isAuthScreens && (
+                            status === "authenticated" ? (
+                                <Button href="/dashboard" size="xs" className="h-8 px-4 text-xs">Dashboard</Button>
+                            ) : (
+                                <Button href="/login" size="xs" className="h-8 px-4 text-xs">Log In</Button>
+                            )
+                        )}
+                        <button onClick={() => setMobileOpen(true)} className="text-zinc-900 dark:text-white p-1 ml-1">
+                            <Menu size={24} />
+                        </button>
                     </div>
                 </div>
             </motion.nav>
@@ -184,37 +153,49 @@ const Navbar = () => {
                         initial={{ x: "100%" }}
                         animate={{ x: 0 }}
                         exit={{ x: "100%" }}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        className="fixed inset-0 z-[100] bg-white dark:bg-zinc-950 flex flex-col px-6 md:hidden w-screen h-screen"
+                        transition={{ type: "tween", ease: [0.32, 0.72, 0.2, 1], duration: 1 }}
+                        className="fixed inset-0 bg-white dark:bg-black z-[100] flex flex-col p-6 md:hidden"
                     >
-                        <div className="flex items-center justify-between py-4">
-                            <Link href="/" onClick={() => setMobileOpen(false)}>
+                        <div className="flex justify-between items-center mb-10 h-10">
+                            <Link href="/" onClick={handleLogoClick}>
                                 <Image
                                     src={Logo}
                                     alt="Logo"
-                                    className="h-12 w-auto object-contain"
-                                    priority
+                                    className="h-8 dark:brightness-0 dark:invert w-auto object-contain"
                                 />
                             </Link>
-                            <button
-                                className="p-2 -mr-2 text-zinc-900 dark:text-white"
-                                onClick={() => setMobileOpen(false)}
-                            >
+                            <button onClick={() => setMobileOpen(false)} className="p-2 -mr-2 text-zinc-900 dark:text-white">
                                 <CloseIcon size={28} />
                             </button>
                         </div>
 
-                        <div className="flex flex-col gap-6 text-2xl font-medium mt-8">
+                        <div className="flex flex-col gap-6">
                             {navLinks.map((item) => (
                                 <Link
                                     key={item.name}
                                     href={item.href}
                                     onClick={() => setMobileOpen(false)}
-                                    className="border-b border-zinc-100 dark:border-zinc-800 pb-4 text-zinc-900 dark:text-zinc-100"
+                                    className="text-2xl font-medium text-zinc-900 dark:text-white"
                                 >
                                     {item.name}
                                 </Link>
                             ))}
+
+                            <div className="mt-4 pt-6 border-t border-zinc-100 dark:border-zinc-800">
+                                {/* UPDATED MOBILE THEME BUTTON */}
+                                <button
+                                    onClick={() => {
+                                        triggerThemeSwitch();
+                                        // Optional: Keep menu open or close it? usually keep it open to see effect
+                                        // setMobileOpen(false); 
+                                    }}
+                                    disabled={isTransitioning}
+                                    className="flex items-center gap-3 text-zinc-500 font-medium"
+                                >
+                                    {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
+                                    <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+                                </button>
+                            </div>
                         </div>
                     </motion.div>
                 )}

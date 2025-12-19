@@ -12,7 +12,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     disabled?: boolean;
     loading?: boolean;
     fullWidth?: boolean;
-    size?: "xs" | 'sm' | 'md' | 'lg' ;
+    size?: "xs" | 'sm' | 'md' | 'lg';
 }
 
 const baseStyles = "inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-white animate-theme duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none";
@@ -21,16 +21,16 @@ const variantStyles = {
     primary: 'hover:bg-black bg-black/90 text-zinc-50 dark:hover:bg-white dark:bg-white/90 dark:text-zinc-950',
     secondary: 'bg-zinc-100 hover:bg-zinc-200/80 text-black dark:bg-zinc-900/90 dark:hover:bg-zinc-900 dark:text-white',
     outline: 'border border-zinc-200 bg-white hover:bg-zinc-100 hover:text-zinc-900 text-zinc-900',
-    ghost: 'hover:bg-zinc-100 hover:text-zinc-900 text-zinc-600 hover:border-zinc-200 border border-transparent',
+    ghost: 'hover:bg-zinc-100 hover:text-zinc-900 text-zinc-600 hover:border-zinc-200 border border-transparent dark:hover:bg-zinc-900 dark:hover:text-white dark:text-white dark:hover:border-zinc-700',
     destructive: 'bg-red-500 text-zinc-50 hover:bg-red-500/90 shadow-sm',
     link: 'text-zinc-900 underline-offset-4 hover:underline p-0 h-auto rounded-none',
     empty: 'text-zinc-500 hover:text-zinc-900 underline-offset-4 p-0 h-auto rounded-none',
 };
 
 const sizeStyles = {
-    xs: 'h-7 px-3 text-xs',
-    sm: 'h-9 px-4 text-xs',
-    md: 'h-11 px-6',
+    xs: 'h-8 px-3 text-xs',
+    sm: 'h-10 px-4 text-sm',
+    md: 'h-12 px-6',
     lg: 'h-14 px-8 text-base',
 };
 

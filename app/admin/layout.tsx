@@ -1,4 +1,4 @@
-import AdminSidebar from "@/components/pages/admin/admin-sidebar";
+import AdminSidebar from "@/components/layout/admin-sidebar";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

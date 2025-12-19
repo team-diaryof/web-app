@@ -98,7 +98,7 @@ export default function Login() {
                             key={status}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
+                        exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.3, ease: "easeInOut" }}
                             className="block"
                         >
@@ -113,7 +113,7 @@ export default function Login() {
                     <div className="w-full border-t border-gray-300"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                    <span className="px-2 bg-white dark:bg-black animate-mode text-gray-500">Or continue with</span>
                 </div>
             </div>
 

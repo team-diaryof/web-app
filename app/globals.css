@@ -27,6 +27,10 @@ html {
   .h-screen-navbar{
     @apply min-h-[calc(100vh-65px)];
   }
+  .full-h{
+    @apply min-h-[calc(100vh-65px)];
+
+  }
 }
 
 @media (prefers-color-scheme: dark) {

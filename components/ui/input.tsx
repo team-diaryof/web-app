@@ -42,7 +42,7 @@ const Input: React.FC<InputProps> = ({
                 <input
                     type={inputType}
                     className={cn(
-                        "w-full rounded-full border border-zinc-100 bg-white focus:bg-zinc-50 dark:focus:bg-zinc-950 dark:bg-black dark:border-zinc-800 px-5 py-3 text-sm outline-none animate-theme",
+                        "w-full rounded-full border border-zinc-100 bg-white focus:bg-zinc-50 dark:focus:bg-zinc-950 dark:bg-black dark:border-zinc-800 px-5 py-3 outline-none animate-theme",
                         "placeholder:text-zinc-400",
                         "focus:border-zinc-300 dark:focus:border-zinc-600",
                         "disabled:cursor-not-allowed disabled:opacity-50",
