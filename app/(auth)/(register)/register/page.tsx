@@ -1,7 +1,5 @@
-// app/(auth)/(register)/register/page.tsx
-
 import AnimatePageWrapper from "@/components/animations/animate-page-wrapper";
-import Register from "@/components/pages/(auth)/(register)/register/register";
+import Register from "@/app/(auth)/(register)/register/register";
 import Link from "next/link";
 
 export const metadata = {
@@ -40,9 +38,9 @@ export default function RegisterPage() {
         <p className="text-gray-600 mb-2">Join our community today</p>
       </header>
       <Register />
-      <p className="mt-6 text-sm text-gray-600">
+      <p className="mt-6 text-sm text-zinc-600 dark:text-zinc-300">
         Already have an account?{" "}
-        <Link href="/login" className="underline hover:text-black">
+        <Link href="/login" className="underline hover:text-black dark:hover:text-white">
           Login
         </Link>
       </p>

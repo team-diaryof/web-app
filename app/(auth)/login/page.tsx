@@ -1,8 +1,8 @@
 // app/(auth)/login/page.tsx
 
 import AnimatePageWrapper from "@/components/animations/animate-page-wrapper";
-import Login from "@/components/pages/(auth)/login/login";
 import Link from "next/link";
+import Login from "./login";
 
 export const metadata = {
   title: "Login | Diaryof",
@@ -41,9 +41,9 @@ export default function LoginPage() {
         <p className="text-gray-600 mb-2">Log in to your account</p>
       </header>
       <Login />
-      <p className="mt-6 text-sm text-gray-600">
+      <p className="mt-6 text-sm text-zinc-600 dark:text-zinc-300">
         Don&apos;t have an account?{" "}
-        <Link href="/register" className="underline hover:text-black">
+        <Link href="/register" className="underline hover:text-black dark:hover:text-white">
           Register
         </Link>
       </p>

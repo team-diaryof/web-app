@@ -34,17 +34,17 @@ export default function Dashboard() {
             <motion.div
               layoutId="new-entry-card"
               onClick={() => setIsModalOpen(true)}
-              className="mb-8 group cursor-text sticky top-[65px] bg-white border-b md:pt-3 border-zinc-200"
+              className="mb-8 group cursor-text sticky top-[65px] bg-white dark:bg-zinc-950 border-b md:pt-3 border-zinc-200 dark:border-zinc-800 z-10"
               initial={{ opacity: 1 }}
             >
-              <div className="bg-white rounded-2xl p-4 transition-all duration-200 flex items-center gap-4">
+              <div className="bg-white dark:bg-zinc-900 rounded-2xl p-4 transition-all duration-200 flex items-center gap-4 border border-zinc-100 dark:border-zinc-800 shadow-sm dark:shadow-none">
                 <motion.div layoutId="new-entry-icon"
-                  className="h-10 w-10 rounded-full bg-zinc-50 border border-zinc-100 flex items-center justify-center text-zinc-400 group-hover:text-zinc-600 transition-colors"
+                  className="h-10 w-10 rounded-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 flex items-center justify-center text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors"
                 >
                   <PenLine size={18} />
                 </motion.div>
                 <div className="flex-1">
-                  <motion.span layoutId="new-entry-placeholder" className="text-zinc-400 text-lg group-hover:text-zinc-500 transition-colors">
+                  <motion.span layoutId="new-entry-placeholder" className="text-zinc-400 dark:text-zinc-500 text-lg group-hover:text-zinc-500 dark:group-hover:text-zinc-400 transition-colors">
                     Write something for today...
                   </motion.span>
                 </div>

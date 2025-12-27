@@ -4,6 +4,7 @@ import logo from '@/public/logo-landscape-transparent.png'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowUpRight } from "lucide-react";
+import ThemeDropdown from "./ui/theme-dropdown"; // Import the new dropdown
 
 const Footer = () => {
     return (
@@ -47,14 +48,23 @@ const Footer = () => {
                     </div>
 
                     <StaggerItem>
-                        <div className="pt-8 border-t border-zinc-100 dark:border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-4">
-                            <p className="text-xs text-zinc-400 font-medium">&copy; {new Date().getFullYear()} DiaryOf Inc.</p>
-                            <div className="flex gap-6">
-                                <span className="flex h-2 w-2 relative">
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                                </span>
-                                <p className="text-xs text-zinc-400 font-medium">All Systems Operational</p>
+                        <div className="pt-8 border-t border-zinc-100 dark:border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-6">
+
+                            <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 order-2 md:order-1">
+                                <p className="text-xs text-zinc-400 font-medium">&copy; {new Date().getFullYear()} DiaryOf Inc.</p>
+                                <div className="flex items-center gap-2">
+                                    <span className="flex h-2 w-2 relative">
+                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                    </span>
+                                    <p className="text-xs text-zinc-400 font-medium">All Systems Operational</p>
+                                </div>
                             </div>
+
+                            <div className="order-1 md:order-2">
+                                <ThemeDropdown />
+                            </div>
+
                         </div>
                     </StaggerItem>
                 </StaggerSection>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { X, Calendar, Clock, Smile, MoreHorizontal, PenLine } from "lucide-react";
+import { Calendar, Clock, Smile, MoreHorizontal, PenLine } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "./ui/button";
 
@@ -32,7 +32,7 @@ export default function NewEntryModal({ isOpen, onClose }: NewEntryModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-50 bg-white backdrop-blur-sm transition-colors"
+            className="fixed inset-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-sm transition-colors"
           />
 
           {/* Modal Container Wrapper */}
@@ -41,18 +41,17 @@ export default function NewEntryModal({ isOpen, onClose }: NewEntryModalProps) {
             {/* THE EXPANDING CARD */}
             <motion.div
               layoutId="new-entry-card"
-              className="pointer-events-auto w-full max-w-2xl bg-white flex flex-col h-fit overflow-hidden"
-              // Adjusted transition for a "simple and subtle" expansion
+              className="pointer-events-auto w-full max-w-2xl bg-white dark:bg-zinc-900 border dark:border-zinc-800 flex flex-col h-fit overflow-hidden rounded-2xl shadow-xl dark:shadow-2xl dark:shadow-black/50"
               transition={{
                 layout: { type: "spring", bounce: 0.2, duration: 0.6 },
                 opacity: { duration: 0.3 }
               }}
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-50">
-                <div className="flex items-center gap-4 text-zinc-400 text-sm font-medium">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-50 dark:border-zinc-800">
+                <div className="flex items-center gap-4 text-zinc-400 dark:text-zinc-500 text-sm font-medium">
                   {/* Animating the icon from the trigger to here */}
-                  <motion.div layoutId="new-entry-icon" className="flex items-center justify-center bg-zinc-50 p-1.5 rounded-full">
+                  <motion.div layoutId="new-entry-icon" className="flex items-center justify-center bg-zinc-50 dark:bg-zinc-800 p-1.5 rounded-full text-zinc-400 dark:text-zinc-400">
                     <PenLine size={14} />
                   </motion.div>
 
@@ -60,7 +59,7 @@ export default function NewEntryModal({ isOpen, onClose }: NewEntryModalProps) {
                     <Calendar size={14} />
                     <span>Today</span>
                   </div>
-                  <div className="w-1 h-1 rounded-full bg-zinc-200" />
+                  <div className="w-1 h-1 rounded-full bg-zinc-200 dark:bg-zinc-700" />
                   <div className="flex items-center gap-2">
                     <Clock size={14} />
                     <span>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
@@ -74,7 +73,7 @@ export default function NewEntryModal({ isOpen, onClose }: NewEntryModalProps) {
                   layoutId="new-entry-placeholder" // Matches the trigger text logic loosely
                   type="text"
                   placeholder="Title"
-                  className="w-full text-3xl font-serif font-medium text-zinc-900 placeholder:text-zinc-300 border-none outline-none bg-transparent mb-6 p-0 focus:ring-0"
+                  className="w-full text-3xl font-serif font-medium text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-300 dark:placeholder:text-zinc-600 border-none outline-none bg-transparent mb-6 p-0 focus:ring-0"
                   autoFocus
                 />
                 <motion.textarea
@@ -84,7 +83,7 @@ export default function NewEntryModal({ isOpen, onClose }: NewEntryModalProps) {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="What's on your mind?..."
-                  className="w-full h-64 resize-none text-zinc-600 placeholder:text-zinc-300 border-none outline-none bg-transparent text-lg leading-relaxed p-0 focus:ring-0"
+                  className="w-full h-64 resize-none text-zinc-600 dark:text-zinc-300 placeholder:text-zinc-300 dark:placeholder:text-zinc-600 border-none outline-none bg-transparent text-lg leading-relaxed p-0 focus:ring-0"
                 />
               </div>
 
@@ -93,7 +92,7 @@ export default function NewEntryModal({ isOpen, onClose }: NewEntryModalProps) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.4 }}
-                className="p-4 flex items-center justify-between border-t border-zinc-100"
+                className="p-4 flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800"
               >
                 <div className="flex gap-1">
                   <ToolbarButton icon={<Smile size={18} />} label="Mood" />
@@ -101,7 +100,7 @@ export default function NewEntryModal({ isOpen, onClose }: NewEntryModalProps) {
                 </div>
                 <div className="flex gap-3">
                   <Button
-                  variant="ghost"
+                    variant="ghost"
                     onClick={onClose}
                   >
                     Cancel
@@ -121,7 +120,7 @@ export default function NewEntryModal({ isOpen, onClose }: NewEntryModalProps) {
 
 const ToolbarButton = ({ icon, label }: { icon: React.ReactNode; label: string }) => (
   <button
-    className="p-2.5 text-zinc-400 hover:text-zinc-700 hover:bg-white hover:shadow-sm rounded-lg transition-all border border-transparent hover:border-zinc-200/60"
+    className="p-2.5 text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-lg transition-all"
     title={label}
   >
     {icon}

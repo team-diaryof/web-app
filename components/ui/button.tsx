@@ -19,7 +19,7 @@ const baseStyles = "inline-flex cursor-pointer items-center justify-center white
 
 const variantStyles = {
     primary: 'hover:bg-black bg-black/90 text-zinc-50 dark:hover:bg-white dark:bg-white/90 dark:text-zinc-950',
-    secondary: 'bg-zinc-100 hover:bg-zinc-200/80 text-black dark:bg-zinc-900/90 dark:hover:bg-zinc-900 dark:text-white',
+    secondary: 'bg-zinc-100 hover:bg-zinc-200/80 text-black dark:bg-zinc-900/90 dark:hover:bg-zinc-900 border-zinc-200 border dark:border-zinc-800 dark:text-white',
     outline: 'border border-zinc-200 bg-white hover:bg-zinc-100 hover:text-zinc-900 text-zinc-900',
     ghost: 'hover:bg-zinc-100 hover:text-zinc-900 text-zinc-600 hover:border-zinc-200 border border-transparent dark:hover:bg-zinc-900 dark:hover:text-white dark:text-white dark:hover:border-zinc-700',
     destructive: 'bg-red-500 text-zinc-50 hover:bg-red-500/90 shadow-sm',

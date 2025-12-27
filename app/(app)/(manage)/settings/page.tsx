@@ -1,92 +1,194 @@
+"use client";
+
 import React from 'react';
-import { Camera } from 'lucide-react';
+import { Laptop, Moon, Sun, Globe, Clock } from 'lucide-react';
+import { useThemeTransition } from '@/components/providers/theme-transition-provider';
+import { Theme } from '@/store/theme';
+import Select from '@/components/ui/select';
 
 export default function GeneralSettingsPage() {
+  const { changeTheme, currentTheme, isTransitioning } = useThemeTransition();
+
   return (
     <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
       
       {/* Page Header */}
       <div>
-        <h2 className="text-2xl font-serif text-zinc-900">General Information</h2>
-        <p className="text-zinc-500 mt-1">Manage your personal details and workspace preferences.</p>
+        <h2 className="text-2xl font-serif text-zinc-900 dark:text-zinc-100">General Settings</h2>
+        <p className="text-zinc-500 dark:text-zinc-400 mt-1">Customize the interface and regional preferences.</p>
       </div>
 
-      <div className="h-px w-full bg-zinc-100" />
+      <div className="h-px w-full bg-zinc-100 dark:bg-zinc-800" />
 
-      {/* Avatar Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-        <div className="relative group cursor-pointer w-fit">
-          <div className="h-24 w-24 rounded-full bg-zinc-50 border border-zinc-200 flex items-center justify-center text-zinc-400 font-serif text-3xl overflow-hidden">
-             SA
-          </div>
-          <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <Camera size={24} className="text-white" />
-          </div>
-        </div>
+      {/* Redesigned Theme Selection */}
+      <section className="space-y-6">
         <div>
-          <h3 className="text-base font-medium text-zinc-900">Profile Photo</h3>
-          <p className="text-sm text-zinc-500 mb-4 max-w-xs">This image will be displayed on your public profile and shared entries.</p>
-          <div className="flex gap-3">
-             <button className="text-xs font-medium text-zinc-900 bg-white border border-zinc-200 px-4 py-2 rounded-lg hover:bg-zinc-50 transition-colors">Change Photo</button>
-             <button className="text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-lg transition-colors">Remove</button>
-          </div>
+          <h3 className="text-base font-medium text-zinc-900 dark:text-zinc-100">Interface Theme</h3>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Select your preferred appearance mode.</p>
         </div>
-      </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <ThemeCard 
+            theme="light" 
+            currentTheme={currentTheme} 
+            onClick={() => changeTheme('light')} 
+            disabled={isTransitioning}
+            label="Light Mode"
+            icon={<Sun size={18} />}
+          >
+             {/* Light Mode Abstract Preview */}
+             <div className="w-full h-full bg-white border border-zinc-200 rounded-lg overflow-hidden flex shadow-sm">
+                <div className="w-1/3 bg-zinc-50 border-r border-zinc-100 h-full p-2 space-y-2">
+                    <div className="h-2 w-full bg-zinc-200/50 rounded-sm" />
+                    <div className="h-2 w-2/3 bg-zinc-200/50 rounded-sm" />
+                    <div className="h-2 w-3/4 bg-zinc-200/50 rounded-sm" />
+                </div>
+                <div className="flex-1 p-2 space-y-2">
+                    <div className="h-8 w-full bg-zinc-50 rounded-md border border-zinc-100" />
+                    <div className="flex gap-2">
+                        <div className="h-16 w-1/2 bg-zinc-50 rounded-md border border-zinc-100" />
+                        <div className="h-16 w-1/2 bg-zinc-50 rounded-md border border-zinc-100" />
+                    </div>
+                </div>
+             </div>
+          </ThemeCard>
 
-      <div className="h-px w-full bg-zinc-100" />
+          <ThemeCard 
+            theme="dark" 
+            currentTheme={currentTheme} 
+            onClick={() => changeTheme('dark')} 
+            disabled={isTransitioning}
+            label="Dark Mode"
+            icon={<Moon size={18} />}
+          >
+             {/* Dark Mode Abstract Preview */}
+             <div className="w-full h-full bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden flex shadow-sm">
+                <div className="w-1/3 bg-zinc-950 border-r border-zinc-800 h-full p-2 space-y-2">
+                    <div className="h-2 w-full bg-zinc-800 rounded-sm" />
+                    <div className="h-2 w-2/3 bg-zinc-800 rounded-sm" />
+                    <div className="h-2 w-3/4 bg-zinc-800 rounded-sm" />
+                </div>
+                <div className="flex-1 p-2 space-y-2">
+                    <div className="h-8 w-full bg-zinc-800/50 rounded-md border border-zinc-800" />
+                    <div className="flex gap-2">
+                        <div className="h-16 w-1/2 bg-zinc-800/50 rounded-md border border-zinc-800" />
+                        <div className="h-16 w-1/2 bg-zinc-800/50 rounded-md border border-zinc-800" />
+                    </div>
+                </div>
+             </div>
+          </ThemeCard>
 
-      {/* Form Fields */}
-      <form className="space-y-6">
+          <ThemeCard 
+            theme="system" 
+            currentTheme={currentTheme} 
+            onClick={() => changeTheme('system')} 
+            disabled={isTransitioning}
+            label="System Default"
+            icon={<Laptop size={18} />}
+          >
+             {/* System Abstract Preview */}
+             <div className="w-full h-full bg-gradient-to-br from-white via-zinc-100 to-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden flex items-center justify-center">
+                 <div className="bg-white/90 dark:bg-black/90 backdrop-blur-sm p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-lg">
+                    <Laptop size={24} className="text-zinc-900 dark:text-zinc-100" />
+                 </div>
+             </div>
+          </ThemeCard>
+        </div>
+      </section>
+
+      <div className="h-px w-full bg-zinc-100 dark:bg-zinc-800" />
+
+      {/* Regional Preferences */}
+      <section className="space-y-6 max-w-2xl">
+         <div>
+          <h3 className="text-base font-medium text-zinc-900 dark:text-zinc-100">Regional Preferences</h3>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Set your language and timezone formats.</p>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <InputGroup label="First Name" defaultValue="Saquib" />
-          <InputGroup label="Last Name" defaultValue="Ali" />
-        </div>
-
-        <InputGroup 
-          label="Email Address" 
-          defaultValue="saquib@diaryof.com" 
-          disabled 
-          helper="Contact support to change your email."
-        />
-
-        <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-700">Bio</label>
-            <textarea 
-                className="w-full min-h-[120px] rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:border-zinc-400 focus:ring-4 focus:ring-zinc-100 transition-all resize-none"
-                placeholder="Write a few sentences about yourself..."
-                defaultValue="I'm a software engineer based in India. I love building minimal web applications."
-            />
-            <div className="flex justify-between items-center text-xs text-zinc-400">
-                <span>Markdown supported</span>
-                <span>0 / 240</span>
+            <div className="space-y-2">
+                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+                    <Globe size={14} /> Language
+                </label>
+                <Select 
+                    options={[
+                        { label: 'English (US)', value: 'en-us' },
+                        { label: 'English (UK)', value: 'en-uk' },
+                        { label: 'Spanish', value: 'es' },
+                        { label: 'French', value: 'fr' },
+                        { label: 'Hindi', value: 'hi' },
+                    ]}
+                    value="en-us"
+                    className="bg-white dark:bg-zinc-900"
+                />
+            </div>
+             <div className="space-y-2">
+                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+                    <Clock size={14} /> Timezone
+                </label>
+                <Select 
+                    options={[
+                        { label: 'Pacific Time (PT)', value: 'pt' },
+                        { label: 'Eastern Time (ET)', value: 'et' },
+                        { label: 'Greenwich Mean Time (GMT)', value: 'gmt' },
+                        { label: 'India Standard Time (IST)', value: 'ist' },
+                    ]}
+                    value="ist"
+                    className="bg-white dark:bg-zinc-900"
+                />
             </div>
         </div>
+      </section>
 
-        <div className="pt-6 flex items-center justify-end gap-4">
-            <button type="button" className="text-sm font-medium text-zinc-500 hover:text-zinc-900 px-4 py-2">Cancel</button>
-            <button type="submit" className="bg-zinc-900 hover:bg-black text-white text-sm font-medium px-6 py-2.5 rounded-lg shadow-sm transition-all hover:translate-y-px">
-                Save Changes
-            </button>
-        </div>
-      </form>
     </div>
   );
 }
 
-// Reusable Input Component
-const InputGroup = ({ label, defaultValue, type = "text", disabled = false, helper }: any) => (
-  <div className="space-y-2">
-    <label className="text-sm font-medium text-zinc-700">{label}</label>
-    <input
-      type={type}
-      defaultValue={defaultValue}
-      disabled={disabled}
-      className={`w-full rounded-lg border px-4 py-2.5 text-sm outline-none transition-all 
-        ${disabled 
-            ? 'bg-zinc-50/50 text-zinc-500 border-zinc-200 cursor-not-allowed' 
-            : 'bg-white border-zinc-200 text-zinc-900 focus:border-zinc-400 focus:ring-4 focus:ring-zinc-100'
-        }`}
-    />
-    {helper && <p className="text-xs text-zinc-500">{helper}</p>}
-  </div>
-);
+// Reusable Theme Card Component
+interface ThemeCardProps {
+    theme: Theme;
+    currentTheme: Theme;
+    onClick: () => void;
+    disabled: boolean;
+    children: React.ReactNode;
+    label: string;
+    icon: React.ReactNode;
+}
+
+const ThemeCard = ({ theme, currentTheme, onClick, disabled, children, label, icon }: ThemeCardProps) => {
+    const isActive = currentTheme === theme;
+    
+    return (
+        <button 
+            onClick={onClick}
+            disabled={disabled}
+            className={`group relative flex flex-col gap-3 text-left outline-none transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+        >
+            <div className={`
+                relative w-full aspect-[4/3] rounded-xl border-2 overflow-hidden transition-all duration-300 shadow-sm
+                ${isActive 
+                    ? 'border-yellow-500 ring-2 ring-yellow-500/20 dark:ring-yellow-500/10' 
+                    : 'border-zinc-200 dark:border-zinc-800 group-hover:border-zinc-300 dark:group-hover:border-zinc-700'
+                }
+            `}>
+                <div className="absolute inset-0 bg-zinc-50 dark:bg-zinc-900 p-3 pointer-events-none">
+                    {children}
+                </div>
+                
+                {/* Active Checkmark overlay */}
+                {isActive && (
+                    <div className="absolute top-2 right-2 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center text-white shadow-sm z-10 animate-in zoom-in duration-200">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                )}
+            </div>
+
+            <div className={`flex items-center gap-2 text-sm font-medium transition-colors ${isActive ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-zinc-200'}`}>
+                {icon}
+                {label}
+            </div>
+        </button>
+    )
+}

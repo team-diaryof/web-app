@@ -15,7 +15,7 @@ export default function TodayNotes() {
       {/* Note Card 1 */}
       {
         todayNotes.map((note) => (
-          <div key={note.id} className="bg-white border border-zinc-200 rounded-2xl p-6">
+          <div key={note.id} className="bg-white dark:bg-black border dark:border-zinc-800 border-zinc-200 rounded-2xl p-6">
             <div className="flex items-center gap-2 mb-3">
 
               <h3 className="text-lg font-serif font-medium text-zinc-900">{note.title}</h3>

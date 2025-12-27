@@ -18,8 +18,8 @@ const LandingPage = () => {
             <DownloadSection />
             <AboutSection />
             <PriceSection />
-            <FaqSection />
             <TestimonialSection />
+            <FaqSection />
             {/* <MindMapSection /> */}
             <MapSection />
         </PageTransition>

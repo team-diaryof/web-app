@@ -7,18 +7,33 @@ export default function ThemeInitializer() {
   const { theme } = useThemeStore();
 
   useEffect(() => {
-    // Initial sync
     const root = document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-  }, []); // Only run once on mount
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-  // We do NOT want a useEffect dependent on [theme] here that force updates 
-  // immediately, because our TransitionProvider handles the specific timing 
-  // during the animation.
-  
+    const applyTheme = () => {
+      const isSystemDark = mediaQuery.matches;
+      const isDark = theme === "dark" || (theme === "system" && isSystemDark);
+
+      if (isDark) {
+        root.classList.add("dark");
+      } else {
+        root.classList.remove("dark");
+      }
+    };
+
+    // Apply immediately
+    applyTheme();
+
+    // Listener for system changes (only active if theme is 'system')
+    const handleSystemChange = () => {
+      if (theme === "system") {
+        applyTheme();
+      }
+    };
+
+    mediaQuery.addEventListener("change", handleSystemChange);
+    return () => mediaQuery.removeEventListener("change", handleSystemChange);
+  }, [theme]); 
+
   return null;
 }

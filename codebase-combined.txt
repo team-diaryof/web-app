@@ -1,0 +1,1139 @@
+================================================================================
+CODEBASE COMBINED FILE
+Folder: components/ui
+Generated: 2025-12-27T15:40:01.310Z
+Total Files: 14
+================================================================================
+
+
+================================================================================
+FILE: components/ui/button.tsx
+================================================================================
+import { cn } from '@/lib/cn';
+import Link from 'next/link';
+import React from 'react';
+import Loading from './loading';
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    children?: React.ReactNode;
+    onClick?: () => void;
+    className?: string;
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive' | 'link' | 'empty';
+    href?: string;
+    disabled?: boolean;
+    loading?: boolean;
+    fullWidth?: boolean;
+    size?: "xs" | 'sm' | 'md' | 'lg';
+}
+
+const baseStyles = "inline-flex cursor-pointer items-center justify-center whitespace-nowrap rounded-full text-sm font-medium ring-offset-white animate-theme duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:pointer-events-none";
+
+const variantStyles = {
+    primary: 'hover:bg-black bg-black/90 text-zinc-50 dark:hover:bg-white dark:bg-white/90 dark:text-zinc-950',
+    secondary: 'bg-zinc-100 hover:bg-zinc-200/80 text-black dark:bg-zinc-900/90 dark:hover:bg-zinc-900 dark:text-white',
+    outline: 'border border-zinc-200 bg-white hover:bg-zinc-100 hover:text-zinc-900 text-zinc-900',
+    ghost: 'hover:bg-zinc-100 hover:text-zinc-900 text-zinc-600 hover:border-zinc-200 border border-transparent dark:hover:bg-zinc-900 dark:hover:text-white dark:text-white dark:hover:border-zinc-700',
+    destructive: 'bg-red-500 text-zinc-50 hover:bg-red-500/90 shadow-sm',
+    link: 'text-zinc-900 underline-offset-4 hover:underline p-0 h-auto rounded-none',
+    empty: 'text-zinc-500 hover:text-zinc-900 underline-offset-4 p-0 h-auto rounded-none',
+};
+
+const sizeStyles = {
+    xs: 'h-8 px-3 text-xs',
+    sm: 'h-10 px-4 text-sm',
+    md: 'h-12 px-6',
+    lg: 'h-14 px-8 text-base',
+};
+
+const Button = ({
+    children,
+    onClick,
+    className,
+    variant = 'primary',
+    href,
+    disabled,
+    loading = false,
+    fullWidth = false,
+    size = "md",
+    ...props
+}: ButtonProps) => {
+
+    const compClasses = cn(
+        baseStyles,
+        sizeStyles[size],
+        variantStyles[variant],
+        fullWidth ? "w-full" : "w-fit",
+        className
+    );
+
+    if (href && !disabled && !loading) {
+        return (
+            <Link href={href} className={compClasses} onClick={onClick}>
+                {children}
+            </Link>
+        );
+    }
+
+    return (
+        <button
+            onClick={onClick}
+            className={compClasses}
+            disabled={disabled || loading}
+            {...props}
+        >
+            {loading ? (
+                <div className="flex items-center gap-2">
+                    <Loading size="xs" dark={variant === 'secondary' || variant === 'outline' || variant === 'ghost'} />
+                    <span className="opacity-70">{children}</span>
+                </div>
+            ) : (
+                children
+            )}
+        </button>
+    );
+};
+
+export default Button;
+
+
+================================================================================
+FILE: components/ui/dot-pattern.tsx
+================================================================================
+export const DotPattern = ({ className }: { className?: string }) => {
+    return (
+        <div className={`absolute inset-0 -z-10 h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,#000_10%,transparent_100%)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] ${className}`} />
+    );
+};
+
+
+================================================================================
+FILE: components/ui/dropdown/dropdown-item.tsx
+================================================================================
+// components/ui/dropdown/dropdown-item.tsx
+"use client";
+
+import { cn } from "@/lib/cn";
+import { useRouter } from "next/navigation";
+import { ReactNode } from "react";
+import { useDropdown } from "./dropdown";
+
+interface DropdownItemProps {
+  children: ReactNode;
+  onClick?: () => void | Promise<void>;
+  className?: string;
+  disabled?: boolean;
+  href?: string;
+  preventClose?: boolean;
+}
+
+export function DropdownItem({
+  children,
+  onClick,
+  className,
+  href,
+  disabled = false,
+  preventClose = false,
+}: DropdownItemProps) {
+  const router = useRouter();
+  const { close } = useDropdown();
+
+  const handleClick = async () => {
+    if (disabled) return;
+
+    if (href) router.push(href);
+    if (onClick) await onClick();
+
+    if (!preventClose) close();
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={disabled}
+      className={cn(
+        "w-full px-3 py-4 md:py-2.5 hover:bg-zinc-50 text-left text-2xl md:text-sm cursor-pointer transition-colors",
+        disabled && "opacity-50 cursor-not-allowed",
+        className
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+
+
+================================================================================
+FILE: components/ui/dropdown/dropdown.tsx
+================================================================================
+"use client";
+
+import { cn } from "@/lib/cn";
+import { AnimatePresence, motion } from "framer-motion";
+import { X } from "lucide-react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  ReactNode,
+} from "react";
+
+const DropdownContext = createContext<{ close: () => void } | null>(null);
+
+export const useDropdown = () => {
+  const ctx = useContext(DropdownContext);
+  if (!ctx) throw new Error("useDropdown must be used inside <Dropdown>");
+  return ctx;
+};
+
+type DropdownAlignment = 
+  | "bottom-left" 
+  | "bottom-right" 
+  | "bottom-center" 
+  | "top-left" 
+  | "top-right" 
+  | "top-center";
+
+interface DropdownProps {
+  trigger: ReactNode;
+  limitHeight?: boolean;
+  children: ReactNode;
+  position?: DropdownAlignment;
+  className?: string;
+  menuClassName?: string;
+  mobileSlideFrom?: "left" | "right" | "bottom";
+}
+
+export function Dropdown({
+  trigger,
+  limitHeight = false,
+  children,
+  position = "bottom-left",
+  className,
+  menuClassName,
+  mobileSlideFrom = "right",
+}: DropdownProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const close = useCallback(() => setIsOpen(false), []);
+
+  useEffect(() => {
+    if(typeof window === "undefined") return;
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) close();
+    };
+    const handleEscape = (e: KeyboardEvent) => e.key === "Escape" && close();
+
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleEscape);
+
+    if (isMobile) document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "";
+    };
+  }, [isOpen, isMobile, close]);
+
+  const positionClasses: Record<DropdownAlignment, string> = {
+    "bottom-left": "top-full mt-2 right-0 ",
+    "bottom-right": "top-full mt-2 left-0 ",
+    "bottom-center": "top-full mt-2 left-1/2 -translate-x-1/2 origin-top",
+    "top-left": "bottom-full mb-2 right-0",
+    "top-right": "bottom-full mb-2 left-0",
+    "top-center": "bottom-full mb-2 left-1/2 -translate-x-1/2 origin-bottom",
+  };
+
+  const isTopAligned = position.startsWith("top");
+
+  // Mobile Animation
+  const mobileAnim =
+    mobileSlideFrom === "bottom"
+      ? { initial: { y: "100%" }, animate: { y: 0 }, exit: { opacity: 0 } }
+      : {
+          initial: { x: mobileSlideFrom === "left" ? "-100%" : "100%" },
+          animate: { x: 0 },
+          exit: { opacity: 0 },
+        };
+
+  const desktopAnim = {
+    initial: { opacity: 0, y: isTopAligned ? 6 : -6, scale: 0.98 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: isTopAligned ? 6 : -6, scale: 0.98 },
+  };
+
+  const animation = isMobile ? mobileAnim : desktopAnim;
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "relative inline-block",
+        className,
+        isOpen ? "z-50" : "z-auto"
+      )}
+    >
+      <div
+        onClick={() => setIsOpen((v) => !v)}
+        className={cn("cursor-pointer", isOpen && "opacity-100")}
+      >
+        {trigger}
+      </div>
+
+      <AnimatePresence>
+        {isOpen && isMobile && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.4 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black z-[60]"
+            onClick={close}
+          />
+        )}
+
+        {isOpen && (
+          <motion.div
+            initial={animation.initial}
+            animate={animation.animate}
+            exit={animation.exit}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className={cn(
+              isMobile
+                ? `fixed ${
+                    mobileSlideFrom === "bottom"
+                      ? "bottom-0 left-0 right-0 rounded-t-2xl max-h-[85vh]"
+                      : "top-0 bottom-0 " +
+                        (mobileSlideFrom === "left" ? "left-0" : "right-0") +
+                        " h-full"
+                  } w-full bg-white z-[70] overflow-hidden flex flex-col`
+                : cn(
+                    "absolute z-[1000] min-w-[220px] bg-white rounded-xl border border-zinc-200",
+                    positionClasses[position]
+                  ),
+              menuClassName,
+              limitHeight && "md:max-h-[35vh]",
+              "overflow-y-auto"
+            )}
+          >
+            {isMobile && (
+              <div
+                className="flex items-center justify-center pt-3 pb-2 flex-shrink-0 cursor-pointer"
+                onClick={close}
+              >
+                {mobileSlideFrom === "bottom" ? (
+                  <div className="w-12 h-1.5 bg-zinc-200 rounded-full" />
+                ) : (
+                  <div className="w-full flex justify-end px-4 pt-2">
+                    <X size={24} />
+                  </div>
+                )}
+              </div>
+            )}
+
+            <DropdownContext.Provider value={{ close }}>
+              <div className={isMobile ? "overflow-y-auto flex-1 pb-8" : ""}>
+                {children}
+              </div>
+            </DropdownContext.Provider>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+
+================================================================================
+FILE: components/ui/dropdown/index.ts
+================================================================================
+// components/ui/dropdown/index.ts
+export { Dropdown } from "./dropdown";
+export { DropdownItem } from "./dropdown-item";
+
+
+
+================================================================================
+FILE: components/ui/error-page.tsx
+================================================================================
+import {
+  FileQuestion,
+  Server,
+  Lock,
+  ShieldBan,
+  WifiOff,
+  Construction,
+  CreditCard,
+  Hourglass,
+  AlertCircle,
+} from "lucide-react";
+import Button from "./button";
+import AnimatePageWrapper from "../animations/animate-page-wrapper";
+
+interface UnifiedErrorPageProps {
+  notFound?: boolean;
+  serverError?: boolean;
+  unauthorized?: boolean;
+  forbidden?: boolean;
+  paymentRequired?: boolean;
+  tooManyRequests?: boolean;
+  maintenance?: boolean;
+  offline?: boolean;
+  badRequest?: boolean;
+
+  title?: string;
+  message?: string;
+  actionLabel?: string;
+  actionLink?: string;
+  onActionClick?: () => void;
+}
+
+const ERROR_CONFIG = {
+  maintenance: {
+    label: "Maintenance",
+    title: "Under Maintenance",
+    message: "We are upgrading our systems. Please check back soon.",
+    icon: Construction,
+  },
+  offline: {
+    label: "Network",
+    title: "No Internet",
+    message: "Check your connection and try again.",
+    icon: WifiOff,
+  },
+  notFound: {
+    label: "404",
+    title: "Page Not Found",
+    message: "The page you’re looking for doesn’t exist.",
+    icon: FileQuestion,
+  },
+  unauthorized: {
+    label: "401",
+    title: "Unauthorized",
+    message: "You must be logged in to continue.",
+    icon: Lock,
+  },
+  forbidden: {
+    label: "403",
+    title: "Access Denied",
+    message: "You do not have permission to view this page.",
+    icon: ShieldBan,
+  },
+  paymentRequired: {
+    label: "Payment",
+    title: "Subscription Required",
+    message: "Update your billing information to proceed.",
+    icon: CreditCard,
+  },
+  serverError: {
+    label: "500",
+    title: "Server Error",
+    message: "An unexpected server error occurred.",
+    icon: Server,
+  },
+  tooManyRequests: {
+    label: "429",
+    title: "Too Many Requests",
+    message: "You're doing that too often. Try again later.",
+    icon: Hourglass,
+  },
+  badRequest: {
+    label: "400",
+    title: "Bad Request",
+    message: "The server couldn't understand your request.",
+    icon: AlertCircle,
+  },
+  default: {
+    label: "Error",
+    title: "Something Went Wrong",
+    message: "An unexpected error occurred.",
+    icon: AlertCircle,
+  },
+};
+
+export default function UnifiedErrorPage(props: UnifiedErrorPageProps) {
+  const type =
+    (props.maintenance && "maintenance") ||
+    (props.offline && "offline") ||
+    (props.paymentRequired && "paymentRequired") ||
+    (props.unauthorized && "unauthorized") ||
+    (props.forbidden && "forbidden") ||
+    (props.notFound && "notFound") ||
+    (props.serverError && "serverError") ||
+    (props.tooManyRequests && "tooManyRequests") ||
+    (props.badRequest && "badRequest") ||
+    "default";
+
+  const config = ERROR_CONFIG[type];
+  const Icon = config.icon;
+
+  return (
+    <AnimatePageWrapper className="w-full  flex flex-col items-center justify-center px-4 sm:px-6 py-12">
+      <div className="max-w-md w-full text-center space-y-8">
+
+        {/* Icon */}
+        <div className="flex justify-center">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gray-100 rounded-full scale-110" />
+            <span className="relative inline-flex h-20 w-20 items-center justify-center rounded-full bg-white border border-gray-200 shadow-sm text-gray-500">
+              <Icon size={32} strokeWidth={1.5} />
+            </span>
+          </div>
+        </div>
+
+        {/* Labels */}
+        <p className="text-xs font-bold tracking-[0.2em] text-gray-400 uppercase">
+          {config.label}
+        </p>
+
+        <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900">
+          {props.title || config.title}
+        </h1>
+
+        <p className="text-base text-gray-500 max-w-sm mx-auto leading-relaxed">
+          {props.message || config.message}
+        </p>
+
+        {/* Action Button */}
+        <div className="flex justify-center pt-4">
+          {props.onActionClick ? (
+            <button
+              onClick={props.onActionClick}
+              className="inline-flex h-11 px-8 items-center justify-center rounded-md bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+            >
+              {props.actionLabel || "Try Again"}
+            </button>
+          ) : (
+            <Button
+              href={props.actionLink || "/"}
+              className="min-w-[140px] h-11 shadow-sm justify-center"
+            >
+              {props.actionLabel || "Return Home"}
+            </Button>
+          )}
+        </div>
+
+      </div>
+    </AnimatePageWrapper>
+  );
+}
+
+
+
+================================================================================
+FILE: components/ui/grid-pattern.tsx
+================================================================================
+export const GridPattern = ({ className }: { className?: string }) => {
+  return (
+    <div className={`absolute inset-0 -z-10 h-full w-full stroke-zinc-100/50 dark:stroke-zinc-800/50 [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_10%,transparent_100%)] ${className}`}>
+      <svg className="h-full w-full" aria-hidden="true">
+        <defs>
+          <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M.5 40V.5H40" fill="none" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" strokeWidth="0" fill="url(#grid-pattern)" />
+      </svg>
+    </div>
+  );
+};
+
+
+================================================================================
+FILE: components/ui/input.tsx
+================================================================================
+// components/ui/input.tsx
+"use client";
+
+import React, { InputHTMLAttributes, useState } from "react";
+import { cn } from "@/lib/cn";
+import { motion, AnimatePresence } from "framer-motion";
+import { Eye, EyeOff } from "lucide-react";
+
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+    label?: string;
+    error?: string;
+    className?: string;
+    icon?: React.ReactNode;
+    variant?: "primary" | "secondary";
+}
+
+const variants = {
+    "primary": "bg-white dark:bg-black border border-zinc-100 dark:border-zinc-800 focus:border-zinc-300 dark:focus:border-zinc-600",
+    "secondary": "bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 focus:border-zinc-400 dark:focus:border-zinc-500",
+}
+
+const Input: React.FC<InputProps> = ({
+    label,
+    error,
+    type = "text",
+    className,
+    icon,
+    variant="secondary",
+    ...props
+}) => {
+    const [showPassword, setShowPassword] = useState(false);
+    const inputType = type === "password" && showPassword ? "text" : type;
+
+    return (
+        <div className="flex flex-col gap-1.5 w-full">
+            {label && (
+                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 ml-1">
+                    {label}
+                </label>
+            )}
+
+            <div className="relative group">
+                {icon && (
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500 group-focus-within:text-zinc-800 animate-theme">
+                        {icon}
+                    </div>
+                )}
+
+                <input
+                    type={inputType}
+                    className={cn(
+                        variants[variant],
+                        "w-full rounded-full border border-zinc-100 focus:bg-zinc-50 dark:focus:bg-zinc-950 dark:border-zinc-800 px-5 py-3 outline-none animate-theme",
+                        "placeholder:text-zinc-400",
+                        "focus:border-zinc-300 dark:focus:border-zinc-600",
+                        "disabled:cursor-not-allowed disabled:opacity-50",
+                        error && "border-red-300 focus:border-red-400",
+                        icon && "pl-11",
+                        className
+                    )}
+                    {...props}
+                />
+
+                {type === "password" && (
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-zinc-400 hover:text-zinc-600 transition-colors"
+                        tabIndex={-1}
+                    >
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                )}
+            </div>
+
+            <AnimatePresence>
+                {error && (
+                    <motion.p
+                        initial={{ opacity: 0, height: 0, y: -5 }}
+                        animate={{ opacity: 1, height: "auto", y: 0 }}
+                        exit={{ opacity: 0, height: 0, y: -5 }}
+                        className="text-xs text-red-500 ml-4 font-medium"
+                    >
+                        {error}
+                    </motion.p>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+};
+
+export default Input;
+
+
+================================================================================
+FILE: components/ui/loading.tsx
+================================================================================
+// components/ui/loading.tsx
+"use client";
+import { cn } from "@/lib/cn";
+import { motion } from "framer-motion";
+
+interface LoadingProps {
+  dark?: boolean;
+  size?: "xs" | "sm" | "md" | "lg";
+  text?: string;
+  className?: string;
+}
+
+const sizeStyles = {
+  xs: "size-4 border-[3px] md:size-3 md:border-2",
+  sm: "size-4 border-[3px]",
+  md: "size-6 border-[4px]",
+  lg: "size-8 border-[6px]",
+};
+
+const Loading = ({
+  dark = false,
+  size = "md",
+  text,
+  className,
+}: LoadingProps) => {
+  return (
+    <div className="flex items-center gap-3 justify-center">
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{
+          repeat: Infinity,
+          duration: 0.8,
+          ease: "linear",
+        }}
+        className={cn(
+          className,
+          "rounded-full border-solid border-inherit",
+          dark ? "border-t-zinc-500" : "border-t-zinc-400 ",
+          sizeStyles[size],
+        )}
+      />
+      {text && <span className="font-playfair text-base">{text}</span>}
+    </div>
+  );
+};
+
+export default Loading;
+
+
+
+================================================================================
+FILE: components/ui/map.tsx
+================================================================================
+// components/ui/map.tsx
+"use client";
+
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import { renderToString } from "react-dom/server";
+import { MapPinIcon } from "@phosphor-icons/react";
+
+interface LocationMapProps {
+  position: [number, number];
+  title?: string;
+  description?: string;
+  zoom?: number;
+}
+
+export default function LocationMap({
+  position,
+  title = "Location",
+  description = "",
+  zoom = 13
+}: LocationMapProps) {
+
+  const iconMarkup = renderToString(
+    <MapPinIcon size={32} weight="fill" />
+  );
+
+  const customIcon = L.divIcon({
+    html: iconMarkup,
+    className: "custom-marker-icon",
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -40]
+  });
+
+  return (
+    <div className="pb-8">
+      <MapContainer
+        center={position}
+        zoom={zoom}
+        className="h-[400px] z-0 w-full rounded-lg"
+        scrollWheelZoom={false}
+      >
+        <TileLayer
+          attribution='&copy; OpenStreetMap contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+
+        <Marker position={position} icon={customIcon}>
+          <Popup>
+            <div className="text-center">
+              <strong>{title}</strong>
+              <br />
+              {description}
+            </div>
+          </Popup>
+        </Marker>
+      </MapContainer>
+    </div>
+  );
+}
+
+
+
+================================================================================
+FILE: components/ui/select.tsx
+================================================================================
+"use client";
+
+import React, { useState, useRef, useEffect } from "react";
+import { cn } from "@/lib/cn";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, Check } from "lucide-react";
+
+export interface Option {
+    label: string;
+    value: string;
+}
+
+interface SelectProps {
+    label?: string;
+    name?: string;
+    value?: string;
+    onChange?: (value: string) => void;
+    options: Option[];
+    placeholder?: string;
+    required?: boolean;
+    className?: string;
+}
+
+const Select: React.FC<SelectProps> = ({
+    label,
+    name,
+    value,
+    onChange,
+    options,
+    placeholder = "Select an option",
+    required,
+    className,
+}) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [selected, setSelected] = useState<Option | null>(
+        options.find((opt) => opt.value === value) || null
+    );
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    // Handle outside click to close
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const handleSelect = (option: Option) => {
+        setSelected(option);
+        setIsOpen(false);
+        if (onChange) onChange(option.value);
+    };
+
+    return (
+        <div className="flex flex-col gap-2 w-full relative" ref={containerRef}>
+            {label && (
+                <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500 ml-1">
+                    {label} {required && <span className="text-amber-500">*</span>}
+                </label>
+            )}
+
+            {/* Hidden input for form submission compatibility */}
+            <input 
+                type="hidden" 
+                name={name} 
+                value={selected?.value || ""} 
+                required={required} 
+            />
+
+            <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                className={cn(
+                    "w-full flex cursor-pointer items-center justify-between border border-zinc-100 rounded-xl px-4 py-3 text-sm transition-all outline-none",
+                    isOpen ? "border-zinc-300" : "",
+                    className
+                )}
+            >
+                <span className={cn("block truncate", !selected && "text-zinc-400")}>
+                    {selected ? selected.label : placeholder}
+                </span>
+                <ChevronDown
+                    size={16}
+                    className={cn(
+                        "text-zinc-400 transition-transform duration-300",
+                        isOpen && "rotate-180 text-primary"
+                    )}
+                />
+            </button>
+
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+                        className="absolute top-[calc(100%+2px)] left-0 w-full bg-white border border-zinc-300 rounded-xl shadow-xl z-50 overflow-hidden"
+                    >
+                        <div className="max-h-[240px] overflow-y-auto custom-scrollbar">
+                            {options.map((option) => (
+                                <button
+                                    key={option.value}
+                                    type="button"
+                                    onClick={() => handleSelect(option)}
+                                    className={cn(
+                                        "w-full cursor-pointer text-left px-4 py-2.5 text-sm flex items-center justify-between transition-colors hover:bg-zinc-50",
+                                        selected?.value === option.value
+                                            ? "text-zinc-900 font-medium"
+                                            : "text-zinc-600 hover:text-zinc-900"
+                                    )}
+                                >
+                                    {option.label}
+                                    {selected?.value === option.value && (
+                                        <Check size={14} className="text-amber-500" />
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+};
+
+export default Select;
+
+
+================================================================================
+FILE: components/ui/text-area.tsx
+================================================================================
+
+
+
+import React, { TextareaHTMLAttributes } from "react";
+import { cn } from "@/lib/cn";
+import { motion, AnimatePresence } from "framer-motion";
+
+interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+    label?: string;
+    error?: string;
+    className?: string;
+}
+
+const TextArea: React.FC<TextAreaProps> = ({
+    label,
+    error,
+    className,
+    ...props
+}) => (
+    <div className="flex flex-col gap-1.5 w-full">
+        {label && (
+            <label className="text-sm font-medium text-zinc-700 ml-1">
+                {label}
+                {props.required && <span className="text-amber-500">*</span>}
+            </label>
+        )}
+        <textarea
+            className={cn(
+                "w-full h-[200px] resize-none rounded-xl border border-zinc-100 bg-white px-5 py-3 text-sm outline-none transition-all",
+                "placeholder:text-zinc-400",
+                "focus:border-zinc-300",
+                "disabled:cursor-not-allowed disabled:opacity-50",
+                error && "border-red-300 focus:border-red-400",
+                className
+            )}
+            rows={4}
+            {...props}
+        />
+        <AnimatePresence>
+            {error && (
+                <motion.p
+                    initial={{ opacity: 0, height: 0, y: -5 }}
+                    animate={{ opacity: 1, height: "auto", y: 0 }}
+                    exit={{ opacity: 0, height: 0, y: -5 }}
+                    className="text-xs text-red-500 ml-4 font-medium"
+                >
+                    {error}
+                </motion.p>
+            )}
+        </AnimatePresence>
+    </div>
+);
+
+export default TextArea;
+
+
+================================================================================
+FILE: components/ui/text-switcher.tsx
+================================================================================
+"use client"
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+
+const TextSwitcher = ({ words }: { words: string[] }) => {
+    const [index, setIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIndex((prev) => (prev + 1) % words.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const currentWord = words[index];
+
+    // Subtle container staggering
+    const containerVariants = {
+        visible: {
+            transition: {
+                staggerChildren: 0.04, // Fast stagger for a flow effect, not a wave
+            }
+        },
+        exit: {
+            transition: {
+                staggerChildren: 0.03,
+                staggerDirection: 1
+            }
+        }
+    };
+
+    // Clean, linear fade with slight movement
+    const letterVariants = {
+        hidden: {
+            y: 10, // Reduced from 20 to 10 for subtlety
+            opacity: 0
+        },
+        visible: {
+            y: 0,
+            opacity: 1,
+            transition: {
+                duration: 0.4
+            }
+        },
+        exit: {
+            y: -10, // Reduced from -20
+            opacity: 0,
+            transition: {
+                duration: 0.3
+            }
+        }
+    };
+
+    return (
+        <span className="inline-block relative min-w-[300px] text-amber-500 font-serif italic h-[1.2em]">
+            <AnimatePresence mode="wait">
+                <motion.span
+                    key={currentWord}
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="inline-block absolute left-0 top-0 whitespace-nowrap"
+                >
+                    {currentWord.split("").map((char, i) => (
+                        <motion.span
+                            key={`${currentWord}-${i}`}
+                            className="inline-block whitespace-pre"
+                            variants={letterVariants}
+                        >
+                            {char}
+                        </motion.span>
+                    ))}
+                </motion.span>
+            </AnimatePresence>
+            {/* Invisible spacer to maintain layout width */}
+            <span className="invisible">{currentWord}</span>
+        </span>
+    );
+};
+
+export default TextSwitcher;
+
+
+================================================================================
+FILE: components/ui/theme-dropdown.tsx
+================================================================================
+"use client";
+
+import { useThemeTransition } from "@/components/providers/theme-transition-provider";
+import { Theme } from "@/store/theme";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronUp, Laptop, Moon, Sun } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+export default function ThemeDropdown() {
+  const { changeTheme, currentTheme, isTransitioning } = useThemeTransition();
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const options: { label: string; value: Theme; icon: React.ReactNode }[] = [
+    { label: "Light", value: "light", icon: <Sun size={16} /> },
+    { label: "Dark", value: "dark", icon: <Moon size={16} /> },
+    { label: "System", value: "system", icon: <Laptop size={16} /> },
+  ];
+
+  const currentOption = options.find((opt) => opt.value === currentTheme) || options[2];
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        onClick={() => !isTransitioning && setIsOpen(!isOpen)}
+        disabled={isTransitioning}
+        className={`flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors border rounded-md 
+        ${isOpen 
+            ? "border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white" 
+            : "border-transparent text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white"
+        }`}
+      >
+        <span>{currentOption.label}</span>
+        <ChevronUp 
+            size={14} 
+            className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} 
+        />
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="absolute bottom-full right-0 mb-2 w-36 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-xl overflow-hidden z-50"
+          >
+            <div className="p-1 flex flex-col gap-0.5">
+              {options.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => {
+                    changeTheme(option.value);
+                    setIsOpen(false);
+                  }}
+                  className={`flex items-center gap-3 w-full px-3 py-2 text-sm rounded-md transition-colors
+                    ${currentTheme === option.value 
+                        ? "bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white font-medium" 
+                        : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 hover:text-black dark:hover:text-white"
+                    }`}
+                >
+                  {option.icon}
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+

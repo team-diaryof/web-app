@@ -1,5 +1,5 @@
 import AnimatePageWrapper from "@/components/animations/animate-page-wrapper";
-import ForgotPasswordWizard from "@/components/pages/(auth)/login/forgot-password";
+import ForgotPasswordWizard from "@/app/(auth)/forgot-password/forgot-password";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

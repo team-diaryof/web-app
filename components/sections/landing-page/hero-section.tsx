@@ -213,7 +213,7 @@ const HeroSection = () => {
                             width={800}
                             height={800}
                             priority
-                            className='w-full max-w-[280px] sm:max-w-[400px] md:max-w-[550px] object-contain relative z-10 drop-shadow-2xl'
+                            className='w-full max-w-[280px] sm:max-w-[400px] md:max-w-[550px] object-contain relative dark:invert z-10 drop-shadow-2xl'
                             alt="Diary Interface"
                         />
                     </motion.div>
