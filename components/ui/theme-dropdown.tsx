@@ -34,7 +34,7 @@ export default function ThemeDropdown() {
       <button
         onClick={() => !isTransitioning && setIsOpen(!isOpen)}
         disabled={isTransitioning}
-      className={`flex items-center gap-2 px-4 py-2 text-sm cursor-pointer text-black dark:text-white bg-zinc-100 dark:bg-zinc-800 font-medium border-zinc-200 dark:border-zinc-700 transition-colors border rounded-full`}
+      className={`flex items-center gap-1 px-3 py-2 text-xs cursor-pointer text-black dark:text-white bg-white dark:bg-zinc-900 font-medium border-zinc-100 dark:border-zinc-800 transition-colors border rounded-full`}
       >
         <span>{currentOption.label}</span>
         <ChevronUp
@@ -50,7 +50,7 @@ export default function ThemeDropdown() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute bottom-full right-0 mb-2 w-36 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden z-50"
+            className="absolute bottom-full right-0 mb-2 w-36 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden z-50"
           >
             <div className="p-1 flex flex-col gap-0.5">
               {options.map((option) => (
@@ -63,7 +63,7 @@ export default function ThemeDropdown() {
                   className={`flex items-center gap-3 w-full px-3 py-2 text-sm rounded-xl cursor-pointer transition-colors
                     ${currentTheme === option.value
                       ? "bg-zinc-100 dark:bg-zinc-800 text-black dark:text-white font-medium"
-                      : "text-zinc-500 dark:text-zinc-400 dark:hover:bg-zinc-800/50 hover:text-black dark:hover:text-white"
+                      : "text-zinc-500 dark:text-zinc-400 hover:text-black dark:hover:text-white"
                     }`}
                 >
                   {option.icon}

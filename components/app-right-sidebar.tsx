@@ -11,17 +11,17 @@ const AppRightSidebar = () => {
 
     return (
         <div className="space-y-6">
-            
+
             {/* Quick Actions Card */}
-            <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 p-2 shadow-sm dark:shadow-none">
+            <div className="rounded-2xl border-zinc-200 dark:border-zinc-900 ">
                 {quickActions.map((action) => {
                     const Icon = action.icon;
                     return (
                         <button
                             key={action.label}
-                            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-left group"
+                            className="w-full flex items-center gap-3 p-3 cursor-pointer rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-left group"
                         >
-                            <div className="h-10 w-10 shrink-0 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-900 dark:text-zinc-100 group-hover:bg-white dark:group-hover:bg-zinc-700 group-hover:shadow-sm border border-transparent group-hover:border-zinc-200 dark:group-hover:border-zinc-600 transition-all">
+                            <div className="h-10 w-10 shrink-0 rounded-lg bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-900 dark:text-zinc-100 group-hover:bg-zinc-100 dark:group-hover:bg-zinc-700 border border-transparent transition-all">
                                 <Icon size={18} strokeWidth={2} />
                             </div>
                             <div className="flex-1 min-w-0">
@@ -40,7 +40,7 @@ const AppRightSidebar = () => {
                     <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Activity Log</h3>
                     <button className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors">View All</button>
                 </div>
-                
+
                 <div className="space-y-4">
                     {[
                         { label: 'Morning Entry', time: '08:30 AM', status: 'done' },

@@ -33,28 +33,26 @@ export default function LocationMap({
   });
 
   return (
-    <div className="pb-8">
-      <MapContainer
-        center={position}
-        zoom={zoom}
-        className="h-[400px] z-0 w-full rounded-lg"
-        scrollWheelZoom={false}
-      >
-        <TileLayer
-          attribution='&copy; OpenStreetMap contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+    <MapContainer
+      center={position}
+      zoom={zoom}
+      className="h-[400px] z-0 w-full bg-green-400"
+      scrollWheelZoom={false}
+    >
+      <TileLayer
+        attribution='&copy; OpenStreetMap contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
 
-        <Marker position={position} icon={customIcon}>
-          <Popup>
-            <div className="text-center">
-              <strong>{title}</strong>
-              <br />
-              {description}
-            </div>
-          </Popup>
-        </Marker>
-      </MapContainer>
-    </div>
+      <Marker position={position} icon={customIcon}>
+        <Popup>
+          <div className="text-center">
+            <strong>{title}</strong>
+            <br />
+            {description}
+          </div>
+        </Popup>
+      </Marker>
+    </MapContainer>
   );
 }

@@ -28,18 +28,15 @@ export default function Dashboard() {
 
           <main className="flex-1 min-w-0">
 
-            {/* We hide this visually when modal is open to prevent duplication during animation, 
-                though Framer usually handles layoutId nicely. 
-            */}
             <motion.div
               layoutId="new-entry-card"
               onClick={() => setIsModalOpen(true)}
-              className="mb-8 group cursor-text sticky top-[65px] bg-white dark:bg-zinc-950 border-b md:pt-3 border-zinc-200 dark:border-zinc-800 z-10"
+              className="mb-8 group cursor-text sticky top-[65px] bg-white dark:bg-black border-b md:pt-3 border-zinc-200 dark:border-zinc-800 z-10"
               initial={{ opacity: 1 }}
             >
-              <div className="bg-white dark:bg-zinc-900 rounded-2xl p-4 transition-all duration-200 flex items-center gap-4 border border-zinc-100 dark:border-zinc-800 shadow-sm dark:shadow-none">
+              <div className="rounded-2xl p-4 transition-all duration-200 flex items-center gap-4">
                 <motion.div layoutId="new-entry-icon"
-                  className="h-10 w-10 rounded-full bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700 flex items-center justify-center text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors"
+                  className="h-10 w-10 rounded-full border border-zinc-100 dark:border-zinc-700 flex items-center justify-center text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors"
                 >
                   <PenLine size={18} />
                 </motion.div>

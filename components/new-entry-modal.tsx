@@ -32,7 +32,7 @@ export default function NewEntryModal({ isOpen, onClose }: NewEntryModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-sm transition-colors"
+            className="fixed inset-0 z-50 bg-white dark:bg-black"
           />
 
           {/* Modal Container Wrapper */}
@@ -41,7 +41,7 @@ export default function NewEntryModal({ isOpen, onClose }: NewEntryModalProps) {
             {/* THE EXPANDING CARD */}
             <motion.div
               layoutId="new-entry-card"
-              className="pointer-events-auto w-full max-w-2xl bg-white dark:bg-zinc-900 border dark:border-zinc-800 flex flex-col h-fit overflow-hidden rounded-2xl shadow-xl dark:shadow-2xl dark:shadow-black/50"
+              className="pointer-events-auto w-full max-w-2xl bg-white dark:bg-black flex flex-col h-fit overflow-hidden rounded-2xl"
               transition={{
                 layout: { type: "spring", bounce: 0.2, duration: 0.6 },
                 opacity: { duration: 0.3 }

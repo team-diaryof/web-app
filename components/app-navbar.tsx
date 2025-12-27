@@ -1,6 +1,6 @@
 "use client";
 
-import Logo from "@/public/logo-landscape-white.png"; // Ensure this path is correct
+import Logo from "@/public/logo-landscape-transparent.png"; // Ensure this path is correct
 import Image from 'next/image';
 import Link from 'next/link';
 import { Bell, Search, X } from "lucide-react"; 
@@ -40,7 +40,7 @@ const AppNavbar = () => {
                     {/* Logo Area */}
                     <div className={`flex items-center shrink-0 transition-opacity duration-200 ${showSearch ? 'opacity-0 md:opacity-100 pointer-events-none md:pointer-events-auto' : 'opacity-100'}`}>
                         <Link href="/"> 
-                            <Image src={Logo} className='w-36' alt="The Diary Of" />
+                            <Image src={Logo} className='w-36 dark:invert dark:brightness-0' alt="The Diary Of" />
                         </Link>
                     </div>
 

@@ -1,48 +1,73 @@
 "use client";
-import dynamic from "next/dynamic";
+
+import { lazy, Suspense } from "react";
 import { MapPin } from "lucide-react";
 import { StaggerSection, StaggerItem } from "@/lib/animations";
 
-const Map = dynamic(() => import("@/components/ui/map"), { ssr: false });
+// Use React.lazy for better compatibility in this environment
+const Map = lazy(() => import("@/components/ui/map"));
+
+const LoadingMap = () => (
+  <div className="w-full h-full bg-zinc-50 dark:bg-zinc-800 animate-pulse flex items-center justify-center text-zinc-400">
+    Loading Map...
+  </div>
+);
 
 export default function MapSection() {
   return (
-    <section className="py-24 px-6 bg-white dark:bg-black">
-      <div className="max-w-[1400px] mx-auto">
-         <StaggerSection className="grid lg:grid-cols-2 gap-8">
-             
-            <StaggerItem>
-                <div className="h-full flex flex-col justify-center p-12 bg-zinc-50 dark:bg-zinc-900 rounded-[2.5rem] border border-zinc-100 dark:border-zinc-800">
-                    <div className="w-12 h-12 bg-white dark:bg-black rounded-2xl flex items-center justify-center mb-6 shadow-sm">
-                        <MapPin className="text-zinc-900 dark:text-white" size={24} />
-                    </div>
-                    <h2 className="text-4xl font-bold text-zinc-900 dark:text-white mb-6">Made in Patna.</h2>
-                    <p className="text-lg text-zinc-500 leading-relaxed mb-8">
-                        Crafted with care in Bihar, India. We believe in software that feels human, respects your privacy, and works efficiently offline.
-                    </p>
-                    <div className="inline-flex items-center gap-3 px-6 py-3 bg-white dark:bg-black rounded-full border border-zinc-200 dark:border-zinc-800 w-fit">
-                        <span className="relative flex h-3 w-3">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                        </span>
-                        <span className="text-sm font-medium">Alinagar, Patna - 800002</span>
-                    </div>
-                </div>
-            </StaggerItem>
+    <section className="py-24 bg-white dark:bg-black overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <StaggerSection
+          className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center"
+          viewportAmount={0.3}
+        >
 
-            <StaggerItem>
-                <div className="h-[500px] w-full bg-zinc-100 dark:bg-zinc-900 rounded-[2.5rem] overflow-hidden border border-zinc-200 dark:border-zinc-800 relative group">
-                    <div className="absolute inset-0 z-10 pointer-events-none border-[12px] border-white/50 dark:border-black/50 rounded-[2.5rem]" />
-                    <Map 
-                        position={[25.58, 85.09]} 
-                        title="DiaryOf HQ" 
-                        description="Alinagar, Patna" 
-                        zoom={14} 
-                    />
-                </div>
-            </StaggerItem>
+          {/* Text Content */}
+          <StaggerItem className="flex flex-col justify-center order-2 lg:order-1">
 
-         </StaggerSection>
+            <h2 className="text-3xl md:text-4xl font-normal text-zinc-900 dark:text-white mb-6 tracking-tight font-serif">
+              Made in Patna.
+            </h2>
+
+            <p className="text-base md:text-lg text-zinc-500 dark:text-zinc-400 leading-relaxed mb-10 max-w-md font-light">
+              Crafted with care in Bihar, India. We believe in software that feels human,
+              respects privacy, and works efficiently offline.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-8 border-t border-zinc-100 dark:border-zinc-800/50">
+              <div>
+                <h4 className="text-sm font-medium text-zinc-900 dark:text-zinc-200 mb-1">Address</h4>
+                <p className="text-zinc-500 dark:text-zinc-500 text-sm leading-relaxed font-light">
+                  Alinagar, Patna<br />
+                  Bihar 800002, India
+                </p>
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-zinc-900 dark:text-zinc-200 mb-1">Contact</h4>
+                <p className="text-zinc-500 dark:text-zinc-500 text-sm leading-relaxed font-light">
+                  hello@diaryof.com<br />
+                  +91 123 456 7890
+                </p>
+              </div>
+            </div>
+          </StaggerItem>
+
+          {/* Map Card */}
+          <StaggerItem
+            className="order-1 lg:order-2 w-full overflow-hidden relative rounded-4xl"
+          >
+
+            <Suspense fallback={<LoadingMap />}>
+              <Map
+                position={[25.58, 85.09]}
+                title="DiaryOf HQ"
+                description="Alinagar, Patna"
+                zoom={13}
+              />
+            </Suspense>
+          </StaggerItem>
+
+        </StaggerSection>
       </div>
     </section>
   );
