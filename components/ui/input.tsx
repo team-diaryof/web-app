@@ -16,7 +16,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 const variants = {
     "primary": "bg-white dark:bg-black border border-zinc-100 dark:border-zinc-800 focus:border-zinc-300 dark:focus:border-zinc-600",
-    "secondary": "bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 focus:border-zinc-400 dark:focus:border-zinc-500",
+    "secondary": "bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-700 focus:border-zinc-200 dark:focus:border-zinc-700",
 }
 
 const Input: React.FC<InputProps> = ({
@@ -50,9 +50,8 @@ const Input: React.FC<InputProps> = ({
                     type={inputType}
                     className={cn(
                         variants[variant],
-                        "w-full rounded-full border border-zinc-100 focus:bg-zinc-50 dark:focus:bg-zinc-950 dark:border-zinc-800 px-5 py-3 outline-none animate-theme",
+                        "w-full rounded-full border border-zinc-100 focus:bg-zinc-50 dark:focus:bg-zinc-950/50 dark:border-zinc-800 px-5 py-3 outline-none animate-theme",
                         "placeholder:text-zinc-400",
-                        "focus:border-zinc-300 dark:focus:border-zinc-600",
                         "disabled:cursor-not-allowed disabled:opacity-50",
                         error && "border-red-300 focus:border-red-400",
                         icon && "pl-11",

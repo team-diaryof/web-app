@@ -78,13 +78,11 @@ const HeroSection = () => {
                     viewport={{ once: true, amount: 0.3 }}
                     variants={staggerGroup}
                 >
-                    {/* --- RESPONSIVE BADGE CONTAINER --- */}
                     <motion.div variants={{
                         hidden: { opacity: 0, y: 10 },
                         visible: { opacity: 1, y: 0 }
                     }}>
                         <Link href="/download">
-                            {/* 1. MOBILE VERSION (Static, Fully Visible) - Hidden on medium screens and up */}
                             <div className="md:hidden inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-100/80 dark:bg-zinc-800/80 backdrop-blur-sm border border-zinc-200/50 dark:border-zinc-700/50 rounded-full cursor-pointer mb-4">
                                 <div className="relative flex h-2 w-2 shrink-0">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -102,7 +100,6 @@ const HeroSection = () => {
                                 </div>
                             </div>
 
-                            {/* 2. DESKTOP VERSION (Hover Expand) - Hidden on small screens */}
                             <motion.div
                                 className="hidden md:inline-flex items-center gap-2 px-3 py-1.5 bg-zinc-100/80 dark:bg-zinc-800/80 backdrop-blur-sm border border-zinc-200/50 dark:border-zinc-700/50 rounded-full cursor-pointer overflow-hidden mb-6"
                                 layout
@@ -154,17 +151,16 @@ const HeroSection = () => {
                             </motion.div>
                         </Link>
                     </motion.div>
-                    {/* --- END BADGE --- */}
 
                     <motion.h1
                         variants={fadeInUp}
-                        className="text-4xl md:text-5xl md:text-7xl font-bold tracking-tight text-zinc-900 dark:text-white">
+                        className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-900 dark:text-white">
                         Your life,
                     </motion.h1>
 
                     <motion.h1
                         variants={fadeInUp}
-                        className="text-4xl md:text-5xl md:text-7xl font-bold tracking-tight text-zinc-400 dark:text-white">
+                        className="text-4xl md:text-6xl font-bold tracking-tight text-zinc-400 dark:text-white">
                         <TextSwitcher words={words} />
                     </motion.h1>
 

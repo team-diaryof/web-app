@@ -41,7 +41,7 @@ const Newsletter = () => {
 
     return (
         <AnimatePageWrapper>
-            <section className="min-h-[90vh] flex items-center justify-center py-24 px-6 bg-white dark:bg-black">
+            <section className="min-h-[90vh] flex items-center justify-center py-24 px-6">
                 <div className="max-w-[1400px] w-full grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
 
                     {/* Left Content */}
@@ -171,7 +171,7 @@ const Newsletter = () => {
                              <Image
                                 src={heroImage}
                                 alt="Newsletter Aesthetic"
-                                className="object-contain"
+                                className="object-contain dark:invert"
                                 fill
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 priority

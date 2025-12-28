@@ -5,9 +5,9 @@ import { useAuthStore } from "@/store/auth";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { ReactNode, useEffect, useRef, useMemo } from "react";
-import UnifiedErrorPage from "./ui/error-page";
-import Loading from "./ui/loading";
-import AnimatePageWrapper from "./animations/animate-page-wrapper";
+import UnifiedErrorPage from "../ui/error-page";
+import Loading from "../ui/loading";
+import AnimatePageWrapper from "../animations/animate-page-wrapper";
 
 interface AuthProviderProps {
   children: ReactNode;

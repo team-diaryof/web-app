@@ -62,7 +62,7 @@ const PriceSection = () => {
     const [activeIndex, setActiveIndex] = useState(1);
 
     return (
-        <section id="pricing" className="py-24 md:py-32 bg-white dark:bg-black">
+        <section id="pricing" className="py-24 md:py-32">
             <div className="max-w-[1200px] mx-auto px-6">
                 
                 <div className="text-center mb-12 md:mb-20 space-y-4">
@@ -116,7 +116,7 @@ const PriceSection = () => {
                                     "relative flex flex-col p-8 rounded-[2rem] border transition-all duration-300 h-full",
                                     plan.highlight
                                         ? "bg-amber-400 border-amber-400 shadow-xl md:scale-105 z-10 text-black" 
-                                        : "bg-white dark:bg-black border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white"
+                                        : "bg-white dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white"
                                 )}>
                                     {plan.badge && (
                                         <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">

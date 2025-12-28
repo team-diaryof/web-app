@@ -5,7 +5,7 @@ import AnimatePageWrapper from "@/components/animations/animate-page-wrapper"
 
 const TermsAndConditionPage = () => {
   return (
-    <AnimatePageWrapper className="py-24 bg-white overflow-hidden">
+    <AnimatePageWrapper className="py-24 overflow-hidden">
       <div className="max-w-5xl mx-auto px-6">
         <header className="mb-16 text-center md:text-left">
           <h1 className="text-4xl md:text-5xl font-bold text-zinc-900 mb-4 font-serif">Terms & Conditions</h1>

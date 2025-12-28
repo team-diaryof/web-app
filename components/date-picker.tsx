@@ -31,7 +31,7 @@ const DatePicker = () => {
                 
                 {/* Control Bar */}
                 <div className="flex items-center justify-between h-8 relative">
-                    <div className="text-zinc-900 font-semibold text-sm pl-2">
+                    <div className=" font-semibold text-sm pl-2">
                         {current.format("MMMM YYYY")}
                     </div>
 

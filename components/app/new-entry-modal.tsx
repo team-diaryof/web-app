@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Calendar, Clock, Smile, MoreHorizontal, PenLine } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import Button from "./ui/button";
+import Button from "../ui/button";
 
 interface NewEntryModalProps {
   isOpen: boolean;
@@ -32,7 +32,7 @@ export default function NewEntryModal({ isOpen, onClose }: NewEntryModalProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-50 bg-white dark:bg-black"
+            className="fixed inset-0 z-50 bg-white/20 dark:bg-blacked/20 backdrop-blur-xl"
           />
 
           {/* Modal Container Wrapper */}
@@ -41,7 +41,7 @@ export default function NewEntryModal({ isOpen, onClose }: NewEntryModalProps) {
             {/* THE EXPANDING CARD */}
             <motion.div
               layoutId="new-entry-card"
-              className="pointer-events-auto w-full max-w-2xl bg-white dark:bg-black flex flex-col h-fit overflow-hidden rounded-2xl"
+              className="pointer-events-auto w-full max-w-3xl bg-white dark:bg-blacked border border-zinc-200/50 dark:border-zinc-900 flex flex-col h-fit overflow-hidden rounded-4xl"
               transition={{
                 layout: { type: "spring", bounce: 0.2, duration: 0.6 },
                 opacity: { duration: 0.3 }

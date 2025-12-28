@@ -35,7 +35,7 @@ export default function RootLayout({
       <ThemeInitializer />
 
       <body
-        className={`${geistSans.variable} ${geistMono.variable} selection:bg-amber-100 bg-white dark:text-white dark:bg-black animate-theme antialiased font-sans font-medium tracking-wider`}
+        className={`${geistSans.variable} ${geistMono.variable} selection:bg-amber-100 bg-white dark:text-white dark:bg-blacked animate-theme antialiased font-sans font-medium tracking-wider`}
       >
         <SessionProvider>
           {/* 2. Transition Provider wraps content to inject the Overlay */}

@@ -20,7 +20,6 @@ const LandingPage = () => {
             <PriceSection />
             <TestimonialSection />
             <FaqSection />
-            {/* <MindMapSection /> */}
             <MapSection />
         </PageTransition>
     )

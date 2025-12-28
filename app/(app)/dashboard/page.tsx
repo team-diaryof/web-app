@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import AppLeftSidebar from "@/components/app-left-sidebar";
-import AppRightSidebar from "@/components/app-right-sidebar";
-import TodayNotes from "@/components/today-notes";
-import NewEntryModal from "@/components/new-entry-modal";
+import AppLeftSidebar from "@/components/app/app-left-sidebar";
+import AppRightSidebar from "@/components/app/app-right-sidebar";
+import TodayNotes from "@/components/app/today-notes";
+import NewEntryModal from "@/components/app/new-entry-modal";
 import { PenLine } from "lucide-react";
 import { motion } from "framer-motion";
 import AnimatePageWrapper from "@/components/animations/animate-page-wrapper";
@@ -31,7 +31,7 @@ export default function Dashboard() {
             <motion.div
               layoutId="new-entry-card"
               onClick={() => setIsModalOpen(true)}
-              className="mb-8 group cursor-text sticky top-[65px] bg-white dark:bg-black border-b md:pt-3 border-zinc-200 dark:border-zinc-800 z-10"
+              className="mb-8 group cursor-text sticky top-[65px] bg-white dark:bg-blacked border-b md:pt-3 border-zinc-200 dark:border-zinc-800 z-10"
               initial={{ opacity: 1 }}
             >
               <div className="rounded-2xl p-4 transition-all duration-200 flex items-center gap-4">

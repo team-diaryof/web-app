@@ -1,7 +1,7 @@
 // app/(auth)/(register)/otp-verification/page.tsx
 
 import AnimatePageWrapper from "@/components/animations/animate-page-wrapper";
-import OTPVerificationScreen from "@/components/pages/(auth)/(register)/otp-verification/otp-verification-screen";
+import OTPVerificationScreen from "@/app/(auth)/(register)/otp-verification/otp-verification";
 
 export const metadata = {
   title: "Verify OTP | Diaryof",

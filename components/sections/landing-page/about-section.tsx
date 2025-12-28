@@ -51,13 +51,10 @@ export default function AboutSection() {
             <div className="h-px w-24 bg-zinc-200 dark:bg-zinc-800" />
           </StaggerItem>
 
-          {/* Features Section */}
           <div className="lg:col-span-7 w-full">
             
-            {/* Mobile Carousel */}
             <div className="flex flex-col lg:hidden h-[280px]">
               
-              {/* Content Area */}
               <div className="relative flex-1 overflow-hidden">
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -73,7 +70,6 @@ export default function AboutSection() {
                 </AnimatePresence>
               </div>
 
-              {/* Bottom Dots */}
               <div className="flex justify-center gap-2 mt-4">
                 {features.map((_, i) => (
                   <button

@@ -8,7 +8,7 @@ import { useAuthStore } from "@/store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import OTPBoxes from "./otp-boxes";
+import OTPBoxes from "../../../../components/otp-boxes";
 import Loading from "@/components/ui/loading";
 import { AnimatePresence, motion } from "framer-motion";
 

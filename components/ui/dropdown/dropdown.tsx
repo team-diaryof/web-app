@@ -1,16 +1,16 @@
 "use client";
 
 import { cn } from "@/lib/cn";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, Transition } from "framer-motion";
 import { X } from "lucide-react";
 import {
   createContext,
+  ReactNode,
   useCallback,
   useContext,
   useEffect,
   useRef,
   useState,
-  ReactNode,
 } from "react";
 
 const DropdownContext = createContext<{ close: () => void } | null>(null);
@@ -21,12 +21,12 @@ export const useDropdown = () => {
   return ctx;
 };
 
-type DropdownAlignment = 
-  | "bottom-left" 
-  | "bottom-right" 
-  | "bottom-center" 
-  | "top-left" 
-  | "top-right" 
+type DropdownAlignment =
+  | "bottom-left"
+  | "bottom-right"
+  | "bottom-center"
+  | "top-left"
+  | "top-right"
   | "top-center";
 
 interface DropdownProps {
@@ -55,7 +55,7 @@ export function Dropdown({
   const close = useCallback(() => setIsOpen(false), []);
 
   useEffect(() => {
-    if(typeof window === "undefined") return;
+    if (typeof window === "undefined") return;
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -93,15 +93,33 @@ export function Dropdown({
 
   const isTopAligned = position.startsWith("top");
 
-  // Mobile Animation
+  // 1. Mobile Transition Config (Explicitly Typed)
+  const smoothTransition: Transition = {
+    type: "tween",
+    ease: [0.32, 0.72, 0.2, 1],
+    duration: 1,
+  };
+
+  // 2. Desktop Transition Config (Explicitly Typed)
+  // This fixes your error by preventing 'ease' from being inferred as string
+  const desktopTransition: Transition = {
+    duration: 0.2,
+    ease: "easeOut",
+  };
+
+  // 3. Animation States
   const mobileAnim =
     mobileSlideFrom === "bottom"
-      ? { initial: { y: "100%" }, animate: { y: 0 }, exit: { opacity: 0 } }
+      ? {
+        initial: { y: "100%" },
+        animate: { y: 0 },
+        exit: { y: "100%" },
+      }
       : {
-          initial: { x: mobileSlideFrom === "left" ? "-100%" : "100%" },
-          animate: { x: 0 },
-          exit: { opacity: 0 },
-        };
+        initial: { x: mobileSlideFrom === "left" ? "-100%" : "100%" },
+        animate: { x: 0 },
+        exit: { x: mobileSlideFrom === "left" ? "-100%" : "100%" },
+      };
 
   const desktopAnim = {
     initial: { opacity: 0, y: isTopAligned ? 6 : -6, scale: 0.98 },
@@ -110,6 +128,9 @@ export function Dropdown({
   };
 
   const animation = isMobile ? mobileAnim : desktopAnim;
+
+  // Now both options are valid Transitions
+  const transition = isMobile ? smoothTransition : desktopTransition;
 
   return (
     <div
@@ -133,6 +154,7 @@ export function Dropdown({
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.4 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 1, ease: [0.32, 0.72, 0.2, 1] }}
             className="fixed inset-0 bg-black z-[60]"
             onClick={close}
           />
@@ -143,23 +165,25 @@ export function Dropdown({
             initial={animation.initial}
             animate={animation.animate}
             exit={animation.exit}
-            transition={{ duration: 0.2, ease: "easeOut" }}
+            transition={transition}
             className={cn(
               isMobile
-                ? `fixed ${
-                    mobileSlideFrom === "bottom"
-                      ? "bottom-0 left-0 right-0 rounded-t-2xl max-h-[85vh]"
-                      : "top-0 bottom-0 " +
-                        (mobileSlideFrom === "left" ? "left-0" : "right-0") +
-                        " h-full"
-                  } w-full bg-white z-[70] overflow-hidden flex flex-col`
+                ? `fixed ${mobileSlideFrom === "bottom"
+                  ? "bottom-0 left-0 right-0 rounded-t-2xl max-h-[85vh]"
+                  : "top-0 bottom-0 " +
+                  (mobileSlideFrom === "left" ? "left-0" : "right-0") +
+                  " h-full"
+                } w-full z-[70] overflow-hidden flex flex-col`
                 : cn(
-                    "absolute z-[1000] min-w-[220px] bg-white rounded-xl border border-zinc-200",
-                    positionClasses[position]
-                  ),
+                  "absolute z-[1000] min-w-[220px] rounded-xl border",
+                  positionClasses[position]
+                ),
+              // Colors
+              "bg-white dark:bg-blacked",
+              "border-zinc-200 dark:border-zinc-800",
               menuClassName,
               limitHeight && "md:max-h-[35vh]",
-              "overflow-y-auto"
+              "overflow-y-auto shadow-lg"
             )}
           >
             {isMobile && (
@@ -168,9 +192,9 @@ export function Dropdown({
                 onClick={close}
               >
                 {mobileSlideFrom === "bottom" ? (
-                  <div className="w-12 h-1.5 bg-zinc-200 rounded-full" />
+                  <div className="w-12 h-1.5 bg-zinc-200 dark:bg-zinc-700 rounded-full" />
                 ) : (
-                  <div className="w-full flex justify-end px-4 pt-2">
+                  <div className="w-full flex justify-end px-4 pt-2 dark:text-zinc-200">
                     <X size={24} />
                   </div>
                 )}

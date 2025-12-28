@@ -1,6 +1,5 @@
 // app/(auth)/layout.tsx
-import AuthProvider from "@/components/auth-provider";
-import BackHeader from "@/components/back-header";
+import AuthProvider from "@/components/providers/auth-provider";
 import Navbar from "@/components/navbar";
 
 export default function AuthLayout({

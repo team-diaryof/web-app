@@ -27,7 +27,7 @@ const FaqSection = () => {
                         {faqs.map((faq, i) => (
                             <StaggerItem key={i}>
                                 <div
-                                    className={`rounded-4xl overflow-hidden transition-all duration-300 border ${openIndex === i ? "bg-zinc-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800" : "bg-zinc-50/30 dark:bg-zinc-950/50 border-zinc-100 dark:border-zinc-800/60"}`}
+                                    className={`rounded-4xl overflow-hidden transition-all duration-300 border ${openIndex === i ? "bg-amber-400 border-zinc-200 dark:border-zinc-800" : "bg-zinc-50/30 dark:bg-zinc-950/50 border-zinc-100 dark:border-zinc-800/60"}`}
                                 >
                                     <button
                                         onClick={() => setOpenIndex(openIndex === i ? null : i)}
@@ -47,7 +47,7 @@ const FaqSection = () => {
                                                 animate={{ height: "auto", opacity: 1 }}
                                                 exit={{ height: 0, opacity: 0 }}
                                             >
-                                                <p className="px-6 pb-6 text-zinc-500 leading-relaxed text-base">
+                                                <p className="px-6 pb-6 text-zinc-50 dark:text-zinc-800 leading-relaxed text-sm">
                                                     {faq.a}
                                                 </p>
                                             </motion.div>
@@ -59,7 +59,7 @@ const FaqSection = () => {
                     </div>
 
                     <StaggerItem className="flex justify-center">
-                        <Button href="/faq" variant="primary" className="group">
+                        <Button href="/help" variant="primary" className="group">
                             View all FAQs <ArrowRight size={16} className="ml-2 group-hover:translate-x-0.5 group-hover:scale-110 transition-transform" />
                         </Button>
                     </StaggerItem>

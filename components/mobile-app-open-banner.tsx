@@ -51,7 +51,7 @@ export default function MobileAppOpenBanner() {
     setVisible(false);
   };
 
-  const buildAppUrl = () => appScheme; // opens default app route
+  const buildAppUrl = () => appScheme;
 
   const handleOpenInApp = () => {
     if (typeof window === "undefined") return;

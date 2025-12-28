@@ -113,7 +113,7 @@ export default function Login() {
                     <div className="w-full border-t border-zinc-300 dark:border-zinc-800"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white dark:bg-black animate-mode text-gray-500">Or continue with</span>
+                    <span className="px-2 bg-white dark:bg-blacked animate-mode text-gray-400">Or continue with</span>
                 </div>
             </div>
 

@@ -55,7 +55,7 @@ const FAQPage = () => {
 
   return (
     <AnimatePageWrapper>
-      <section className="min-h-screen bg-white dark:bg-black py-32 px-6">
+      <section className="py-32 px-6">
         <div className="max-w-[1200px] mx-auto">
           
           {/* Header */}

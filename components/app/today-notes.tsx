@@ -1,12 +1,7 @@
-export interface TodayNote {
-  id: string;
-  title: string;
-  content: string;
-  timestamp: string; // ISO string
-}
+"use client";
+import { Clock } from "lucide-react";
 
-// Temporary static data; replace with API fetch as needed.
-export const todayNotes: TodayNote[] = [
+const todayNotes = [
   {
     id: "n1",
     title: "Morning Reflection",
@@ -68,3 +63,36 @@ export const todayNotes: TodayNote[] = [
     timestamp: new Date().setHours(17, 45, 0, 0).toString(),
   }
 ];
+
+export default function TodayNotes() {
+
+  /*
+  id: "n1",
+    title: "Morning Reflection",
+    content: "Outlined the day's focus areas and reviewed ongoing tasks.",
+    timestamp: new Date().setHours(8, 5, 0, 0).toString(),
+  */
+  return (
+    <div className="space-y-4 max-md:px-4">
+      {/* Note Card 1 */}
+      {
+        todayNotes.map((note) => (
+          <div key={note.id} className="bg-zinc-50 dark:bg-zinc-950/30 border dark:border-zinc-900 border-zinc-100 rounded-2xl p-6">
+            <div className="flex items-center gap-2 mb-3">
+
+              <h3 className="text-lg font-serif font-medium">{note.title}</h3>
+
+              <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-950 text-zinc-500 flex items-center gap-1">
+                <Clock size={10} /> {new Date(parseInt(note.timestamp)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            </div>
+            <p className="text-zinc-600 leading-relaxed text-sm">
+              {note.content}
+            </p>
+          </div>
+        ))
+      }
+
+    </div>
+  );
+}

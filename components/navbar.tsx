@@ -67,7 +67,7 @@ const Navbar = () => {
         <>
             <motion.nav
                 className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] flex items-center ${scrolled
-                    ? "py-3 bg-white dark:bg-black backdrop-blur-2xl border-b border-zinc-200/50 dark:border-zinc-800/50"
+                    ? "py-3 bg-white dark:bg-blacked backdrop-blur-2xl border-b border-zinc-200/50 dark:border-zinc-800"
                     : "py-8 bg-transparent border-b border-transparent"
                     }`}
             >
@@ -129,7 +129,7 @@ const Navbar = () => {
                         animate={{ x: 0 }}
                         exit={{ x: "100%" }}
                         transition={{ type: "tween", ease: [0.32, 0.72, 0.2, 1], duration: 1 }}
-                        className="fixed inset-0 bg-white dark:bg-black z-[100] flex flex-col p-6 md:hidden"
+                        className="fixed inset-0 bg-white dark:bg-blacked z-[100] flex flex-col p-6 md:hidden"
                     >
                         <div className="flex justify-between items-center mb-10 h-10">
                             <Link href="/" onClick={handleLogoClick}>

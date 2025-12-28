@@ -9,6 +9,7 @@ html {
 
 @theme inline {
   --color-background: var(--background);
+  --color-blacked: var(--blacked);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -37,6 +38,7 @@ html {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --blacked:#1D1C1C;
   }
 }
 
