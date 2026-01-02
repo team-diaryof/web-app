@@ -11,9 +11,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-
-// IMPORT THIS
-import { signIn } from "next-auth/react"; 
+import { signIn } from "next-auth/react";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -33,8 +31,7 @@ export default function Login() {
             toast.error(response.message || "Login failed. Please try again.");
             return;
         }
-        
-        // Ensure response.data is defined before accessing it
+
         if (response.data) {
             const { token, user } = response.data;
             setAuth(token, user);
@@ -48,17 +45,47 @@ export default function Login() {
         }
     };
 
-    // UPDATED FUNCTION
     const handleGoogleSignIn = async () => {
-        setStatus("loading"); // Optional: show loading state while redirecting
+        setStatus("loading");
         try {
-            await signIn("google", { 
-                callbackUrl: "/dashboard", // Where to go after login
-                redirect: true 
+            await signIn("google", {
+                callbackUrl: "/dashboard",
+                redirect: true
             });
         } catch (error) {
             setStatus("idle");
             toast.error("Something went wrong with Google Login");
+        }
+    };
+
+    // --- NEW: Test User Handler ---
+    const handleTestLogin = async () => {
+        setStatus("loading");
+
+        // Pre-fill inputs for visual feedback
+        const testEmail = "user@diaryof.com";
+        const testPass = "diaryofpassword";
+        setEmail(testEmail);
+        setPassword(testPass);
+
+        // Trigger login logic
+        const response = await authServices.login(testEmail, testPass);
+
+        if (response.success === false) {
+            setStatus("idle");
+            toast.error(response.message || "Test login failed.");
+            return;
+        }
+
+        if (response.data) {
+            const { token, user } = response.data;
+            setAuth(token, user);
+            toast.success("Test user logged in! Redirecting...");
+
+            setTimeout(() => {
+                setStatus("idle");
+                user.role === "admin" ? router.push("/admin/dashboard") : router.push("/dashboard");
+            }, 1000);
         }
     };
 
@@ -98,7 +125,7 @@ export default function Login() {
                             key={status}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
+                            exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.3, ease: "easeInOut" }}
                             className="block"
                         >
@@ -116,17 +143,29 @@ export default function Login() {
                     <span className="px-2 bg-white dark:bg-blacked animate-mode text-gray-400">Or continue with</span>
                 </div>
             </div>
+            <div className="w-full flex gap-2 justify-center items-center">
 
-            <Button
-                variant="secondary"
-                className="w-full flex items-center h-12 justify-center gap-3"
-                onClick={handleGoogleSignIn}
-                disabled={status === "loading"}
-                type="button" // Important so it doesn't submit the form
-            >
-                <Image src={googleImage} className="size-8" alt="google-image" />
-                Sign in with Google
-            </Button>
+
+                <Button
+                    variant="secondary"
+                    className="w-full flex items-center h-12 justify-center gap-3"
+                    onClick={handleGoogleSignIn}
+                    disabled={status === "loading"}
+                    type="button"
+                >
+                    <Image src={googleImage} className="size-8" alt="google-image" />
+                    Sign in with Google
+                </Button>
+                <Button
+                    variant="ghost"
+                    className="w-1/3 h-12 text-xs"
+                    onClick={handleTestLogin}
+                    disabled={status === "loading"}
+                    type="button"
+                >
+                    Login as Guest
+                </Button>
+            </div>
         </>
     );
 }
